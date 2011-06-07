@@ -4,7 +4,7 @@ use Perl6::Say;
 use JSON::Syck;
 use YAML;
 use List::Util qw/reduce/;
-# use List::MoreUtils qw/uniq/;
+use List::MoreUtils qw/uniq/;
 no warnings 'once';
 
 use BSTree;
