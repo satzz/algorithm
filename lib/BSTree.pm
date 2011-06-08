@@ -28,22 +28,28 @@ sub add_one {
     my $self = shift;
     my $new = shift;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
-    defined $val
-        ? ($new < $val
-           ? (defined $left
-              ? BSTree->create($val, $left->add_one($new), $right)
-              : BSTree->create($val, BSTree->create($new), $right))
-           : (defined $right
-              ? BSTree->create($val, $left, $right->add_one($new))
-              : BSTree->create($val, $left, BSTree->create($new))))
-            : BSTree->create($new);
+    if (defined $val) {
+        if ($new < $val) {
+            $self->left
+                (defined $left
+                 ? $left->add_one($new)
+                 : BSTree->create($new));
+        } else { 
+            $self->right
+                (defined $right
+                 ?  $right->add_one($new)
+                 :  BSTree->create($new));
+        }
+    } else {
+        $self->val($new);
+    }
+    $self;
 }
 
 sub add {
     my $self= shift;
-    $self = $self->add_one($_) for @_;
-#     $self->add_one($_) for @_;
-    return $self;
+    $self->add_one($_) for @_;
+    $self;
 }
 
 sub add_random {

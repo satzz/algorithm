@@ -26,12 +26,12 @@ f                 : flatten
 q                 : quit
 };
                 },
-                a => sub {$tree = $tree->add(@_)->print},
+                a => sub {$tree->add(@_)->print},
                 q => sub {undef},
                 p => sub {$tree->print},
                 s => sub {$tree->search_say(@_)},
                 f => sub {$tree->flatten_say},
-                r => sub {$tree = $tree->add_random($_[0])->print},
+                r => sub {$tree->add_random($_[0])->print},
             );
 
 while(my $line = prompt '> ') {
