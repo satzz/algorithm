@@ -77,6 +77,11 @@ sub flatten {
      defined $right ? $right->flatten : ());
 }
 
+sub flatten_say {
+    my $self = shift;
+    say JSON::Syck::Dump [$self->flatten];
+}
+
 sub print {
     my $self = shift;
     my $h = $self->to_hash;

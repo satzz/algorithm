@@ -7,6 +7,7 @@ use List::Util qw/reduce/;
 use List::MoreUtils qw/uniq/;
 no warnings 'once';
 
+use Data::Dumper;
 use IO::Prompt;
 use BSTree;
 
@@ -44,12 +45,14 @@ r $times          : add random values
 d $val            : delete
 s $val            : search
 p                 : print
+f                 : flatten
 q                 : quit
 };
                 },
                 a => sub {$tree = $tree->add(@_)->print},
                 q => sub {last CMD},
                 p => sub {$tree->print},
+                f => sub {$tree->flatten_say},
                 r => sub {$tree = $tree->add_random($_[0])->print},
             );
 
