@@ -43,16 +43,15 @@ sub add {
     return $self;
 }
 
-sub add_print {
-    my $self= shift;
-    my $new_tree = $self->add(@_);
-    $new_tree->print;
-    $new_tree;
+sub add_random {
+    my ($self, $times) = @_;
+    my $max_val = 100;
+    $self->add(map {int($max_val * rand)} 1..$times)->print;
 }
 
 sub build_from {
     my $class = shift;
-    $class->new->add_print(@_);
+    $class->new->add(@_)->print;
 }
 
 sub to_hash {
@@ -79,9 +78,11 @@ sub flatten {
 }
 
 sub print {
-    my $h = shift->to_hash;
+    my $self = shift;
+    my $h = $self->to_hash;
     say JSON::Syck::Dump $h;
     say YAML::Dump $h;
+    $self;
 }
 
 sub search {
