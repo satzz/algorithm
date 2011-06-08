@@ -7,30 +7,61 @@ use List::Util qw/reduce/;
 use List::MoreUtils qw/uniq/;
 no warnings 'once';
 
+use IO::Prompt;
 use BSTree;
 
-scalar @ARGV >= 2 or die 'input "perl bstree.pl $max_val $nodes"';
-my ($max_val, $nodes) = @ARGV;
+# scalar @ARGV >= 2 or die 'input "perl bstree.pl $max_val $nodes"';
+# my ($max_val, $nodes) = @ARGV;
+# my ($max_val, $nodes) = @ARGV;
 
-say 'Generating an array:';
+# say 'Generating an array:';
 
-my @orig = map {int($max_val * rand)} 1..$nodes;
-my @uniq = uniq @orig;
-# my @sorted = sort {$a <=> $b} @uniq;
-# my @reverse = reverse @sorted;
+# my @orig = map {int($max_val * rand)} 1..$nodes;
+# my @uniq = uniq @orig;
+# # my @sorted = sort {$a <=> $b} @uniq;
+# # my @reverse = reverse @sorted;
 
-say JSON::Syck::Dump [@orig];
+# say JSON::Syck::Dump [@orig];
 
-say 'Translate to Binary Search Tree:';
+# say 'Translate to Binary Search Tree:';
 
-my $tree = BSTree->build_from(@uniq);
-$tree->print;
+# my $tree = BSTree->build_from(@uniq);
+# $tree->print;
 
-say 'Flatten the tree:';
-my @f = $tree->flatten;
-say JSON::Syck::Dump \@f;
+# say 'Flatten the tree:';
+# my @f = $tree->flatten;
+# say JSON::Syck::Dump \@f;
 
-my $k = $tree->search($f[0]);
-say "KEY:" . $k;
+# my $k = $tree->search($f[0]);
+# # say "KEY:" . $k;
+
+my $tree = BSTree->new;
+
+my %response = (
+                h => sub {
+                    print q{h : help
+a $val1 $val2 ..  : add 
+r $times          : add random values
+d $val            : delete
+s $val            : search
+p                 : print
+q                 : quit
+};
+                },
+                a => sub {
+                    $tree = $tree->add(@_);
+                    $tree->print;
+                },
+                q => sub {last CMD},
+                p => sub {$tree->print}
+            );
+
+CMD:
+while(my $line = prompt '> ') {
+    my ($cmd, @val) = split /\s/, $line;
+    my $res = $response{$cmd} or
+        print "invalid input. hit 'h' for help.\n" and next;
+    $res->(@val);
+}
 
 1;
