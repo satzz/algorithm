@@ -11,30 +11,6 @@ use Data::Dumper;
 use IO::Prompt;
 use BSTree;
 
-# scalar @ARGV >= 2 or die 'input "perl bstree.pl $max_val $nodes"';
-# my ($max_val, $nodes) = @ARGV;
-# my ($max_val, $nodes) = @ARGV;
-# say 'Generating an array:';
-
-# my @orig = map {int($max_val * rand)} 1..$nodes;
-# my @uniq = uniq @orig;
-# # my @sorted = sort {$a <=> $b} @uniq;
-# # my @reverse = reverse @sorted;
-
-# say JSON::Syck::Dump [@orig];
-
-# say 'Translate to Binary Search Tree:';
-
-# my $tree = BSTree->build_from(@uniq);
-# $tree->print;
-
-# say 'Flatten the tree:';
-# my @f = $tree->flatten;
-# say JSON::Syck::Dump \@f;
-
-# my $k = $tree->search($f[0]);
-# # say "KEY:" . $k;
-
 my $tree = BSTree->new;
 
 my %response = (
