@@ -134,7 +134,7 @@ sub flush {
 
 sub is_leaf {
     my $self = shift;
-    ! $self->is_leaf;
+    ! $self->has_child;
 }
 
 sub has_child {
