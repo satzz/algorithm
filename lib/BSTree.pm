@@ -14,7 +14,9 @@ use YAML;
 __PACKAGE__->mk_accessors qw/val left right/;
 
 sub create {
-    my $t = shift->new({val => shift});
+    my $class = shift;
+    my $t = $class->new;
+    if (my $new = shift) {$t->val($new)};
     if (scalar @_) {
         $t->left(shift);
         $t->right(shift);
@@ -40,6 +42,7 @@ sub add_one {
 sub add {
     my $self= shift;
     $self = $self->add_one($_) for @_;
+#     $self->add_one($_) for @_;
     return $self;
 }
 
