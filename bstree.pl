@@ -14,14 +14,16 @@ use BSTree;
 my $tree = BSTree->new;
 
 my $help = q{
-a $val1 $val2 ..  : add 
+a $val1 $val2 ..  : add values
 r $times          : add random values
-d $val            : delete
-s $val            : search
-p                 : print
+d $val            : delete a value
+s $val            : search a value
+p                 : print 
+p $file_name      : print to a file
 f                 : flatten
-dump $file_name   : dump
-size $size        : size
+max $max          : set/get the max value
+size              : get the size
+h                 : get the height
 flush             : flush
 q                 : quit
 };
