@@ -29,6 +29,7 @@ q                 : quit
                 a => sub {$tree = $tree->add(@_)->print},
                 q => sub {undef},
                 p => sub {$tree->print},
+                s => sub {$tree->search_say(@_)},
                 f => sub {$tree->flatten_say},
                 r => sub {$tree = $tree->add_random($_[0])->print},
             );

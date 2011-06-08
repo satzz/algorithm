@@ -95,10 +95,17 @@ sub search {
     defined $target or return;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
     $target eq $val
-        ? $self
+        ? 1
             : $target < $val
-                ? (defined $left ? $left->search($target) : undef)
-                    : (defined $right ? $right->search($target) : undef);
+                ? (defined $left ? $left->search($target) : 0)
+                    : (defined $right ? $right->search($target) : 0);
+}
+
+sub search_say {
+    my ($self, $target) = @_;
+    say $self->search($target)
+        ? "your tree has the element $target"
+            : "your tree does not have the elemnt $target";
 }
 
 sub delete {
