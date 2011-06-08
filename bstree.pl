@@ -26,18 +26,17 @@ q                 : quit
 };
                 },
                 a => sub {$tree = $tree->add(@_)->print},
-                q => sub {last CMD},
+                q => sub {undef},
                 p => sub {$tree->print},
                 f => sub {$tree->flatten_say},
                 r => sub {$tree = $tree->add_random($_[0])->print},
             );
 
-CMD:
 while(my $line = prompt '> ') {
     my ($cmd, @val) = split /\s/, $line;
     my $res = $response{$cmd} or
         print "invalid input. hit 'h' for help.\n" and next;
-    $res->(@val);
+    defined $res->(@val) or last;
 }
 
 1;
