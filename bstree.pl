@@ -19,6 +19,7 @@ my %response = (
 a $val1 $val2 ..  : add 
 r $times          : add random values
 d $val            : delete
+dump $file_name   : dump
 s $val            : search
 p                 : print
 f                 : flatten
