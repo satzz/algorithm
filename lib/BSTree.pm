@@ -132,4 +132,15 @@ sub flush {
     $self;
 }
 
+sub is_leaf {
+    my $self = shift;
+    ! $self->is_leaf;
+}
+
+sub has_child {
+    my $self = shift;
+    $self->left and return 1;
+    $self->right and return 1;
+}
+
 1;
