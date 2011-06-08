@@ -16,7 +16,8 @@ __PACKAGE__->mk_accessors qw/val left right/;
 sub create {
     my $class = shift;
     my $t = $class->new;
-    if (my $new = shift) {$t->val($new)};
+    my $new = shift;
+    defined $new and $t->val($new);
     if (scalar @_) {
         $t->left(shift);
         $t->right(shift);
@@ -123,5 +124,12 @@ sub delete {
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
 }
 
-1;
+sub flush {
+    my $self = shift;
+    $self->val(undef);
+    $self->left(undef);
+    $self->right(undef);
+    $self;
+}
 
+1;
