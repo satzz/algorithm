@@ -13,7 +13,7 @@ use BSTree;
 # scalar @ARGV >= 2 or die 'input "perl bstree.pl $max_val $nodes"';
 # my ($max_val, $nodes) = @ARGV;
 # my ($max_val, $nodes) = @ARGV;
-
+my $max_val = 100;
 # say 'Generating an array:';
 
 # my @orig = map {int($max_val * rand)} 1..$nodes;
@@ -49,11 +49,13 @@ q                 : quit
 };
                 },
                 a => sub {
-                    $tree = $tree->add(@_);
-                    $tree->print;
+                    $tree = $tree->add_print(@_);
                 },
                 q => sub {last CMD},
-                p => sub {$tree->print}
+                p => sub {$tree->print},
+                r => sub {
+                    $tree = $tree->add_print(map {int($max_val * rand)} 1..$_[0]);
+                },
             );
 
 CMD:

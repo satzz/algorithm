@@ -22,23 +22,37 @@ sub create {
     $t;
 }
 
-sub add {
+sub add_one {
     my $self = shift;
     my $new = shift;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
     defined $val
         ? ($new < $val
            ? (defined $left
-              ? BSTree->create($val, $left->add($new), $right)
+              ? BSTree->create($val, $left->add_one($new), $right)
               : BSTree->create($val, BSTree->create($new), $right))
            : (defined $right
-              ? BSTree->create($val, $left, $right->add($new))
+              ? BSTree->create($val, $left, $right->add_one($new))
               : BSTree->create($val, $left, BSTree->create($new))))
             : BSTree->create($new);
 }
 
+sub add {
+    my $self= shift;
+    $self = $self->add_one($_) for @_;
+    return $self;
+}
+
+sub add_print {
+    my $self= shift;
+    my $new_tree = $self->add(@_);
+    $new_tree->print;
+    $new_tree;
+}
+
 sub build_from {
-    reduce {$a->add($b)} (shift->new, @_);
+    my $class = shift;
+    $class->new->add_print(@_);
 }
 
 sub to_hash {
