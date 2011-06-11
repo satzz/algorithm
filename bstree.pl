@@ -18,7 +18,7 @@ a $val1 $val2 ..  : add values
 r $times          : add random values
 d $val            : delete a value
 s $val            : search a value
-p                 : print 
+p                 : print
 p $file_name      : print to a file
 f                 : flatten
 max $max          : set/get the max value
