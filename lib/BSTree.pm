@@ -59,12 +59,12 @@ sub add {
 sub add_random {
     my ($self, $times) = @_;
     my $max_val = 100;
-    $self->add(map {int($max_val * rand)} 1..$times)->print;
+    $self->add(map {int($max_val * rand)} 1..$times);
 }
 
 sub build_from {
     my $class = shift;
-    $class->new->add(@_)->print;
+    $class->new->add(@_);
 }
 
 sub to_hash {
@@ -98,7 +98,6 @@ sub flatten_say {
 sub print {
     my $self = shift;
     $self->flatten_say;
-
     my $h = $self->to_hash;
     say JSON::Syck::Dump $h;
     say YAML::Dump $h;
@@ -134,7 +133,7 @@ sub _delete {
             $self->val($max_node);
             return;
         }
-        my $lr = ($parent->left == $self) ? 'left' : 'right';
+        my $lr = $parent->left == $self ? 'left' : 'right';
         $parent->$lr(defined $left ? $left :
                          defined $right ? $right : undef);
 #             $parent->$lr($left // $right // undef); # in perl 5.10 ?
