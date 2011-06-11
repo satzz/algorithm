@@ -31,6 +31,7 @@ q                 : quit
 my %response = (
                 a => sub {$tree->add(@_)->print},
                 q => sub {undef},
+                d => sub {$tree->delete($_[0])->print},
                 p => sub {$tree->print},
                 s => sub {$tree->search_say(@_)},
                 f => sub {$tree->flatten_say},

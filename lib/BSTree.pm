@@ -9,19 +9,22 @@ use List::Util qw/reduce/;
 use Perl6::Say;
 use JSON::Syck;
 use YAML;
+# use 5.010;
 
 
-__PACKAGE__->mk_accessors qw/val left right/;
+__PACKAGE__->mk_accessors qw/val left right parent/;
 
+# REMOVE ME
 sub create {
     my $class = shift;
     my $t = $class->new;
     my $new = shift;
     defined $new and $t->val($new);
-    if (scalar @_) {
-        $t->left(shift);
-        $t->right(shift);
-    }
+    $t->parent(shift);
+#     if (scalar @_) {
+#         $t->left(shift);
+#         $t->right(shift);
+#     }
     $t;
 }
 
@@ -34,12 +37,12 @@ sub add_one {
             $self->left
                 (defined $left
                  ? $left->add_one($new)
-                 : BSTree->create($new));
-        } else { 
+                 : BSTree->create($new, $self));
+        } else {
             $self->right
                 (defined $right
                  ?  $right->add_one($new)
-                 :  BSTree->create($new));
+                 :  BSTree->create($new, $self));
         }
     } else {
         $self->val($new);
@@ -94,6 +97,8 @@ sub flatten_say {
 
 sub print {
     my $self = shift;
+    $self->flatten_say;
+
     my $h = $self->to_hash;
     say JSON::Syck::Dump $h;
     say YAML::Dump $h;
@@ -118,11 +123,44 @@ sub search_say {
             : "your tree does not have the elemnt $target";
 }
 
-sub delete {
-    my ($self, $target) = @_;
-    defined $target or return;
-    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
+sub _delete {
+    my ($self, $target_val) = @_;
+    defined $target_val or warn "$target_val is not defined." and return $self;
+    my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
+    if ($val == $target_val) {
+        if ($left and $right) {
+            my $max_node = $left->max_node;
+            $max_node->parent->right($max_node->left);
+            $self->val($max_node);
+            return;
+        }
+        my $lr = ($parent->left == $self) ? 'left' : 'right';
+        $parent->$lr(defined $left ? $left :
+                         defined $right ? $right : undef);
+#             $parent->$lr($left // $right // undef); # in perl 5.10 ?
+        return;
+    }
+    my $next = $target_val < $val ? 'left' : 'right';
+    if (defined $self->$next) {
+        $self->$next->_delete($target_val);
+        return;
+    }
+    say "$target_val is not found";
+    return;
 }
+
+sub max_node {
+    my $self = shift;
+    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
+    defined $right ? $right->max_node : $self;
+}
+
+sub delete {
+    my $self = shift;
+    $self->_delete(shift);
+    $self;
+}
+
 
 sub flush {
     my $self = shift;
