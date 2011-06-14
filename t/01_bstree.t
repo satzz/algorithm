@@ -44,8 +44,8 @@ LR: root
 V: 3
 YAML
 
-$tree->add(4);
-test_from_yaml($tree, <<YAML);
+$tree->add(7, 5, 8, 4 ,6);
+my $all = <<YAML;
 ---
 L:
   LR: left
@@ -57,16 +57,34 @@ L:
   V: 1
 LR: root
 R:
+  L:
+    L:
+      LR: left
+      P: 5
+      V: 4
+    LR: left
+    P: 7
+    R:
+      LR: right
+      P: 5
+      V: 6
+    V: 5
   LR: right
   P: 3
-  V: 4
+  R:
+    LR: right
+    P: 7
+    V: 8
+  V: 7
 V: 3
 YAML
+test_from_yaml($tree, $all);
 
 
 
 
-warn $tree->to_yaml;
+
+
 sub test_from_yaml {
     my ($tree, $yaml) = @_;
     is_deeply( $tree->to_hash, YAML::Load($yaml));
