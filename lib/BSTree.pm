@@ -125,31 +125,68 @@ sub search_say {
             : "your tree does not have the elemnt $target";
 }
 
-sub _delete {
+sub delete {
     my ($self, $target_val) = @_;
-    defined $target_val or warn "$target_val is not defined." and return $self;
-    my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
-    if ($val == $target_val) {
-        if ($left and $right) {
-            my $max_node = $left->max_node;
-            $max_node->parent->right($max_node->left);
-            $self->val($max_node);
-            return;
+    defined $target_val or say "target value is not defined." and return $self;
+    my $target = $self->search($target_val);
+    defined $target or say "$target_val is not found." and return $self;
+    my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
+#     my $parent = $target->parent;
+    if (defined $parent) {
+        if (defined $left and defined $right) {
+            my $max = $left->max_node;
+            my $lr = $max->parent->lr;
+            $max->parent->$lr(undef);
+            $target->val($max->val);
+        } else {
+            my $lr = $parent->lr;
+            my $child =  $left || $right;
+            if (defined $child) {
+                $parent->$lr($child);
+                $child->parent($parent);
+            } else {
+                $parent->$lr(undef);
+            }
         }
-        my $lr = $parent->left == $self ? 'left' : 'right';
-        $parent->$lr(defined $left ? $left :
-                         defined $right ? $right : undef);
-#             $parent->$lr($left // $right // undef); # in perl 5.10 ?
-        return;
+    } else {
+        if (defined $left) {
+            my $new_val;
+            my $max = $left->max_node;
+            $new_val = $max->val;
+            $max->parent->right(undef);
+            $target->val($new_val);
+        } else {
+            $target->copy_from($right);
+        }
     }
-    my $next = $target_val < $val ? 'left' : 'right';
-    if (defined $self->$next) {
-        $self->$next->_delete($target_val);
-        return;
-    }
-    say "$target_val is not found";
-    return;
+    $self;
 }
+
+# sub _delete {
+#     my ($self, $target_val) = @_;
+#     defined $target_val or warn "$target_val is not defined." and return $self;
+#     my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
+#     if ($val == $target_val) {
+#         if ($left and $right) {
+#             my $max_node = $left->max_node;
+#             $max_node->parent->right($max_node->left);
+#             $self->val($max_node);
+#             return;
+#         }
+#         my $lr = $parent->left == $self ? 'left' : 'right';
+#         $parent->$lr(defined $left ? $left :
+#                          defined $right ? $right : undef);
+# #             $parent->$lr($left // $right // undef); # in perl 5.10 ?
+#         return;
+#     }
+#     my $next = $target_val < $val ? 'left' : 'right';
+#     if (defined $self->$next) {
+#         $self->$next->_delete($target_val);
+#         return;
+#     }
+#     say "$target_val is not found";
+#     return;
+# }
 
 sub max_node {
     my $self = shift;
@@ -159,11 +196,6 @@ sub max_node {
 }
 
 
-sub delete {
-    my $self = shift;
-    $self->_delete(shift);
-    $self;
-}
 
 
 sub flush {
