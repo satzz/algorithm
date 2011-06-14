@@ -29,7 +29,44 @@ LR: root
 V: 3
 YAML
 
+$tree->add(2);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  LR: left
+  P: 3
+  R:
+    LR: right
+    P: 1
+    V: 2
+  V: 1
+LR: root
+V: 3
+YAML
 
+$tree->add(4);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  LR: left
+  P: 3
+  R:
+    LR: right
+    P: 1
+    V: 2
+  V: 1
+LR: root
+R:
+  LR: right
+  P: 3
+  V: 4
+V: 3
+YAML
+
+
+
+
+warn $tree->to_yaml;
 sub test_from_yaml {
     my ($tree, $yaml) = @_;
     is_deeply( $tree->to_hash, YAML::Load($yaml));
