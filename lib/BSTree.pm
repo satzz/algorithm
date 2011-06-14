@@ -198,15 +198,15 @@ sub to_yaml {
     YAML::Dump($self->to_hash);
 }
 
-sub is_leaf {
-    my $self = shift;
-    ! $self->has_child;
-}
+# sub is_leaf {
+#     my $self = shift;
+#     ! $self->has_child;
+# }
 
-sub has_child {
-    my $self = shift;
-    $self->left and return 1;
-    $self->right and return 1;
-}
+# sub has_child {
+#     my $self = shift;
+#     $self->left and return 1;
+#     $self->right and return 1;
+# }
 
 1;
