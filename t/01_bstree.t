@@ -128,7 +128,32 @@ R:
 V: 3
 YAML
 
-
+$tree->delete(1);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  LR: left
+  P: 3
+  V: 2
+LR: root
+R:
+  L:
+    LR: left
+    P: 7
+    R:
+      LR: right
+      P: 4
+      V: 6
+    V: 4
+  LR: right
+  P: 3
+  R:
+    LR: right
+    P: 7
+    V: 8
+  V: 7
+V: 3
+YAML
 
 warn $tree->to_yaml;
 
