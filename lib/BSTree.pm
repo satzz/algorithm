@@ -71,7 +71,10 @@ sub to_hash {
     my $self = shift;
     my $h = {
              V => $self->val,
+             LR => $self->lr,
          };
+    my $p = $self->parent;
+    $h->{P} = $p->val if defined $p;
     if (my $left = $self->left) {
         $h->{L} = $left->to_hash;
     }
@@ -105,14 +108,14 @@ sub print {
 }
 
 sub search {
-    my ($self, $target) = @_;
-    defined $target or return;
+    my ($self, $target_val) = @_;
+    defined $target_val or return;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
-    $target eq $val
-        ? 1
-            : $target < $val
-                ? (defined $left ? $left->search($target) : 0)
-                    : (defined $right ? $right->search($target) : 0);
+    $target_val == $val
+        ? $self
+            : $target_val < $val
+                ? (defined $left ? $left->search($target_val) : undef)
+                    : (defined $right ? $right->search($target_val) : undef);
 }
 
 sub search_say {
@@ -151,8 +154,10 @@ sub _delete {
 sub max_node {
     my $self = shift;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
-    defined $right ? $right->max_node : $self;
+    (defined $right and defined $right->val)
+        ? $right->max_node : $self;
 }
+
 
 sub delete {
     my $self = shift;
@@ -167,6 +172,30 @@ sub flush {
     $self->left(undef);
     $self->right(undef);
     $self;
+}
+
+sub lr {
+    my ($self) = @_;
+    my $parent = $self->parent;
+    defined $parent or return 'root';
+    my $left = $parent->left;
+    defined $left or return 'right';
+    ($left->val == $self->val) ? 'left' : 'right';
+}
+
+sub copy_from {
+    my ($self, $target) = @_;
+    $self->$_($target->$_) for qw/val left right parent/;
+}
+
+sub to_json {
+    my $self = shift;
+    JSON::Syck::Dump($self->to_hash);
+}
+
+sub to_yaml {
+    my $self = shift;
+    YAML::Dump($self->to_hash);
 }
 
 sub is_leaf {
