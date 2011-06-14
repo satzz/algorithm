@@ -80,10 +80,22 @@ V: 3
 YAML
 test_from_yaml($tree, $all);
 
-
-
-
-
+my $s = $tree->search(5);
+test_from_yaml($tree, $all);
+test_from_yaml($s, <<YAML);
+---
+L:
+  LR: left
+  P: 5
+  V: 4
+LR: left
+P: 7
+R:
+  LR: right
+  P: 5
+  V: 6
+V: 5
+YAML
 
 sub test_from_yaml {
     my ($tree, $yaml) = @_;
