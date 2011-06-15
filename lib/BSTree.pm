@@ -135,7 +135,7 @@ sub delete {
     if (defined $parent) {
         if (defined $left and defined $right) {
             my $max = $left->max_node;
-            my $lr = $max->parent->lr;
+            my $lr = $max->lr;
             $max->parent->$lr(undef);
             $target->val($max->val);
         } else {
