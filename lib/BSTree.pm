@@ -139,7 +139,7 @@ sub delete {
             $max->parent->$lr(undef);
             $target->val($max->val);
         } else {
-            my $lr = $parent->lr;
+            my $lr = $target->lr;
             my $child =  $left || $right;
             if (defined $child) {
                 $parent->$lr($child);
