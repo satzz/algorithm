@@ -150,11 +150,12 @@ sub delete {
         }
     } else {
         if (defined $left) {
-            my $new_val;
             my $max = $left->max_node;
-            $new_val = $max->val;
-            $max->parent->right(undef);
-            $target->val($new_val);
+            if ($left->val == $max->val) {
+                $target->val($max->val);
+                $target->left($max->left);
+            } else {
+            }
         } else {
             $target->copy_from($right);
         }
