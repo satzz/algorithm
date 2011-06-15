@@ -9,6 +9,8 @@ use List::Util qw/reduce/;
 use Perl6::Say;
 use JSON::Syck;
 use YAML;
+use Data::Dumper;
+
 # use 5.010;
 
 
@@ -127,24 +129,31 @@ sub search_say {
 
 sub delete {
     my ($self, $target_val) = @_;
+
     defined $target_val or say "target value is not defined." and return $self;
     my $target = $self->search($target_val);
     defined $target or say "$target_val is not found." and return $self;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
-#     my $parent = $target->parent;
     if (defined $parent) {
-        if (defined $left and defined $right) {
+        if (defined $left) {
             my $max = $left->max_node;
+            $target->val($max->val);
             my $max_lr = $max->lr;
             $max->parent->$max_lr(undef);
-            $target->val($max->val);
+
         } else {
-            my $lr = $target->lr;
-            my $child =  $left || $right;
-            if (defined $child) {
-                $parent->$lr($child);
-                $child->parent($parent);
+            if (defined $right) {
+                my $max = $right->max_node;
+                my $max_lr = $max->lr;
+                $max->parent->$max_lr(undef);
+                $target->val($max->val);
             } else {
+                my $lr = $target->lr;
+                warn $lr;
+#                 warn Dumper $parent;
+#                 warn Dumper $self;
+                warn $parent->to_yaml;
+                
                 $parent->$lr(undef);
             }
         }
