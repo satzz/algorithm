@@ -178,6 +178,33 @@ R:
 V: 3
 YAML
 
+$tree->add(1);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  L:
+    LR: left
+    P: 2
+    V: 1
+  LR: left
+  P: 3
+  V: 2
+LR: root
+R:
+  L:
+    LR: left
+    P: 6
+    V: 4
+  LR: right
+  P: 3
+  R:
+    LR: right
+    P: 6
+    V: 8
+  V: 6
+V: 3
+YAML
+
 
 
 warn $tree->to_yaml;
