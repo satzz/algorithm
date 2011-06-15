@@ -133,13 +133,19 @@ sub delete {
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
 #     my $parent = $target->parent;
     if (defined $parent) {
+        my $lr = $target->lr;
         if (defined $left and defined $right) {
             my $max = $left->max_node;
             my $max_lr = $max->lr;
-            $max->parent->$max_lr(undef);
-            $target->val($max->val);
+            if ($lr eq 'root' and $left->val eq $max->val) {
+                $self->val($max->val);
+                $self->left($max->left);
+            } else {
+                $max->parent->$max_lr(undef);
+                $target->val($max->val);
+            }
+            
         } else {
-            my $lr = $target->lr;
             my $child =  $left || $right;
             if (defined $child) {
                 $parent->$lr($child);
