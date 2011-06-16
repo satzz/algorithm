@@ -36,15 +36,17 @@ sub add_one {
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
     if (defined $val) {
         if ($new < $val) {
-            $self->left
-                (defined $left
-                 ? $left->add_one($new)
-                 : BSTree->create($new, $self));
+            if (defined $left) {
+                $left->add_one($new);
+            } else {
+                $self->left(BSTree->create($new, $self));
+            }
         } else {
-            $self->right
-                (defined $right
-                 ?  $right->add_one($new)
-                 :  BSTree->create($new, $self));
+            if (defined $right) {
+                $right->add_one($new);
+            } else {
+                $self->right(BSTree->create($new, $self));
+            }
         }
     } else {
         $self->val($new);
@@ -149,11 +151,6 @@ sub delete {
                 $target->val($max->val);
             } else {
                 my $lr = $target->lr;
-                warn $lr;
-#                 warn Dumper $parent;
-#                 warn Dumper $self;
-                warn $parent->to_yaml;
-                
                 $parent->$lr(undef);
             }
         }
@@ -163,7 +160,7 @@ sub delete {
             if ($left->val == $max->val) {
                 $target->val($max->val);
                 $target->left($max->left);
-            } else {
+                $max->left->parent($target);
             }
         } else {
             $target->copy_from($right);
