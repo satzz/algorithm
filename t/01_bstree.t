@@ -300,6 +300,13 @@ LR: root
 V: 6
 YAML
 
+$tree->delete(6);
+test_from_yaml($tree, <<YAML);
+---
+LR: root
+YAML
+
+
 warn $tree->to_yaml;
 
 
