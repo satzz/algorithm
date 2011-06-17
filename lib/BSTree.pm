@@ -76,6 +76,7 @@ sub remove {
     my $target = $self->search($target_val);
     defined $target or say "$target_val is not found." and return $self;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
+
     if (defined $parent) {
         my $max =
             defined $left  ? $left->max_node  :
@@ -84,25 +85,28 @@ sub remove {
         $target->val($max->val);
         my $max_lr = $max->lr;
         $max->parent->$max_lr(undef);
-    } else {
-        if (defined $left) {
-            my $max = $left->max_node;
-            if ($left->val == $max->val) {
-                $target->val($max->val);
-                my $max_left = $max->left;
-                $target->left($max_left);
-                defined $max_left and $max_left->parent($target);
-                defined $right and $right->parent($target);
-            }
-        } else {
-            if (defined $right) {
-                $target->copy_from($right);
-            } else {
-                $target->val(undef);
-            }
-        }
+        return $self;
     }
-    $self;
+
+    if (defined $left) {
+        my $max = $left->max_node;
+        if ($left->val == $max->val) {
+            $target->val($max->val);
+            my $max_left = $max->left;
+            $target->left($max_left);
+            defined $max_left and $max_left->parent($target);
+            defined $right and $right->parent($target);
+        }
+        return $self;
+    }
+
+    if (defined $right) {
+        $target->copy_from($right);
+        return $self;
+    }
+
+    $target->val(undef);
+    return  $self;
 }
 
 sub flush {
