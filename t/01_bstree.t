@@ -266,7 +266,15 @@ R:
 V: 6
 YAML
 
-
+$tree->delete(6);
+---
+LR: root
+R:
+  LR: right
+  P: 4
+  V: 8
+V: 4
+YAML
 
 warn $tree->to_yaml;
 
