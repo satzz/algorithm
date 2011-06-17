@@ -69,6 +69,19 @@ sub search_say {
             : "your tree does not have the elemnt $target";
 }
 
+sub copy_from {
+    my ($self, $target) = @_;
+    defined $target and $self->$_($target->$_) for qw/val left right/;
+}
+
+sub flush {
+    my $self = shift;
+    $self->val(undef);
+    $self->left(undef);
+    $self->right(undef);
+    $self;
+}
+
 sub remove {
     my ($self, $target_val) = @_;
 
@@ -109,28 +122,6 @@ sub remove {
     return  $self;
 }
 
-sub flush {
-    my $self = shift;
-    $self->val(undef);
-    $self->left(undef);
-    $self->right(undef);
-    $self;
-}
-
-sub flatten {
-    my $self = shift;
-    my $left = $self->left;
-    my $right = $self->right;
-    (defined $left ? $left->flatten : (),
-     $self->val,
-     defined $right ? $right->flatten : ());
-}
-
-sub flatten_say {
-    my $self = shift;
-    say JSON::Syck::Dump [$self->flatten];
-}
-
 sub max_node {
     my $self = shift;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
@@ -145,11 +136,6 @@ sub lr {
     my $left = $parent->left;
     defined $left or return 'right';
     ($left->val == $self->val) ? 'left' : 'right';
-}
-
-sub copy_from {
-    my ($self, $target) = @_;
-    defined $target and $self->$_($target->$_) for qw/val left right/;
 }
 
 sub to_hash {
@@ -171,6 +157,20 @@ sub to_json {
 sub to_yaml {
     my $self = shift;
     YAML::Dump($self->to_hash);
+}
+
+sub flatten {
+    my $self = shift;
+    my $left = $self->left;
+    my $right = $self->right;
+    (defined $left ? $left->flatten : (),
+     $self->val,
+     defined $right ? $right->flatten : ());
+}
+
+sub flatten_say {
+    my $self = shift;
+    say JSON::Syck::Dump [$self->flatten];
 }
 
 sub print {
