@@ -81,7 +81,7 @@ sub search_say {
             : "your tree does not have the elemnt $target";
 }
 
-sub delete {
+sub remove {
     my ($self, $target_val) = @_;
 
     defined $target_val or say "target value is not defined." and return $self;

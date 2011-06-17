@@ -100,7 +100,7 @@ R:
 V: 5
 YAML
 
-$tree->delete(5);
+$tree->remove(5);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -131,7 +131,7 @@ R:
 V: 3
 YAML
 
-$tree->delete(1);
+$tree->remove(1);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -158,7 +158,7 @@ R:
 V: 3
 YAML
 
-$tree->delete(7);
+$tree->remove(7);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -211,7 +211,7 @@ YAML
                 
 # TODO:parent test
 
-$tree->delete(3);
+$tree->remove(3);
 # TODO:parent test
 test_from_yaml($tree, <<YAML);
 ---
@@ -235,7 +235,7 @@ R:
 V: 2
 YAML
 
-$tree->delete(1);
+$tree->remove(1);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
@@ -254,7 +254,7 @@ R:
 V: 2
 YAML
 
-$tree->delete(2);
+$tree->remove(2);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -269,7 +269,7 @@ R:
 V: 6
 YAML
 
-$tree->delete(6);
+$tree->remove(6);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
@@ -280,14 +280,14 @@ R:
 V: 4
 YAML
 
-$tree->delete(4);
+$tree->remove(4);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
 V: 8
 YAML
 
-$tree->delete(8);
+$tree->remove(8);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
@@ -300,7 +300,7 @@ LR: root
 V: 6
 YAML
 
-$tree->delete(6);
+$tree->remove(6);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
@@ -310,6 +310,7 @@ my $times = 10;
 $tree->add_random($times);
 my @a = $tree->flatten;
 is scalar(@a), $times;
+
 
 
 # warn $tree->to_yaml;
