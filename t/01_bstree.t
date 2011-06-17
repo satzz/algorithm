@@ -306,18 +306,13 @@ test_from_yaml($tree, <<YAML);
 LR: root
 YAML
 
-my $times = 10;
-$tree->add_random($times);
-my @a = $tree->flatten;
-is scalar(@a), $times;
-
 $tree->flush;
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
 YAML
 
-$tree->add(4,2,1,3)->remove(4);
+$tree->flush->add(4,2,1,3)->remove(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -332,8 +327,7 @@ LR: root
 V: 3
 YAML
 
-$tree->flush;
-$tree->add(5,4,2,1,3)->remove(4);
+$tree->flush->add(5,4,2,1,3)->remove(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -352,6 +346,11 @@ LR: root
 V: 5
 YAML
 
+
+my $times = 10;
+$tree->flush->add_random($times);
+my @a = $tree->flatten;
+is scalar(@a), $times;
 
 
 # warn $tree->to_yaml;
