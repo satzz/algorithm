@@ -16,18 +16,9 @@ use Data::Dumper;
 
 __PACKAGE__->mk_accessors qw/val left right parent/;
 
-# REMOVE ME
-sub create {
-    my $class = shift;
-    my $t = $class->new;
-    my $new = shift;
-    defined $new and $t->val($new);
-    $t->parent(shift);
-#     if (scalar @_) {
-#         $t->left(shift);
-#         $t->right(shift);
-#     }
-    $t;
+sub append {
+    my ($self, $lr, $new) = @_;
+    $self->$lr(BSTree->new({val => $new, parent => $self}));
 }
 
 sub add_one {
@@ -39,13 +30,13 @@ sub add_one {
             if (defined $left) {
                 $left->add_one($new);
             } else {
-                $self->left(BSTree->create($new, $self));
+                $self->append('left', $new);
             }
         } else {
             if (defined $right) {
                 $right->add_one($new);
             } else {
-                $self->right(BSTree->create($new, $self));
+                $self->append('right', $new);
             }
         }
     } else {
