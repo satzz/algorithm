@@ -63,46 +63,6 @@ sub build_from {
     $class->new->add(@_);
 }
 
-sub to_hash {
-    my $self = shift;
-    my $h = {
-             V => $self->val,
-             LR => $self->lr,
-         };
-    my $p = $self->parent;
-    $h->{P} = $p->val if defined $p;
-    if (my $left = $self->left) {
-        $h->{L} = $left->to_hash;
-    }
-    if (my $right = $self->right) {
-        $h->{R} = $right->to_hash;
-    }
-    return $h;
-}
-
-sub flatten {
-    my $self = shift;
-    my $left = $self->left;
-    my $right = $self->right;
-    (defined $left ? $left->flatten : (),
-     $self->val,
-     defined $right ? $right->flatten : ());
-}
-
-sub flatten_say {
-    my $self = shift;
-    say JSON::Syck::Dump [$self->flatten];
-}
-
-sub print {
-    my $self = shift;
-    $self->flatten_say;
-    my $h = $self->to_hash;
-    say JSON::Syck::Dump $h;
-    say YAML::Dump $h;
-    $self;
-}
-
 sub search {
     my ($self, $target_val) = @_;
     defined $target_val or return;
@@ -161,19 +121,59 @@ sub delete {
     $self;
 }
 
-sub max_node {
-    my $self = shift;
-    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
-    (defined $right and defined $right->val)
-        ? $right->max_node : $self;
-}
-
 sub flush {
     my $self = shift;
     $self->val(undef);
     $self->left(undef);
     $self->right(undef);
     $self;
+}
+
+sub to_hash {
+    my $self = shift;
+    my $h = {
+             V => $self->val,
+             LR => $self->lr,
+         };
+    my $p = $self->parent;
+    $h->{P} = $p->val if defined $p;
+    if (my $left = $self->left) {
+        $h->{L} = $left->to_hash;
+    }
+    if (my $right = $self->right) {
+        $h->{R} = $right->to_hash;
+    }
+    return $h;
+}
+
+sub flatten {
+    my $self = shift;
+    my $left = $self->left;
+    my $right = $self->right;
+    (defined $left ? $left->flatten : (),
+     $self->val,
+     defined $right ? $right->flatten : ());
+}
+
+sub flatten_say {
+    my $self = shift;
+    say JSON::Syck::Dump [$self->flatten];
+}
+
+sub print {
+    my $self = shift;
+    $self->flatten_say;
+    my $h = $self->to_hash;
+    say JSON::Syck::Dump $h;
+    say YAML::Dump $h;
+    $self;
+}
+
+sub max_node {
+    my $self = shift;
+    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
+    (defined $right and defined $right->val)
+        ? $right->max_node : $self;
 }
 
 sub lr {
