@@ -84,7 +84,7 @@ sub flatten {
     my $left = $self->left;
     my $right = $self->right;
     (defined $left ? $left->flatten : (),
-     $self->val, 
+     $self->val,
      defined $right ? $right->flatten : ());
 }
 
