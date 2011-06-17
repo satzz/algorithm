@@ -93,15 +93,14 @@ sub remove {
     my $copied;
     if (defined $left) {
         my $max = $left->max_node;
+        $target->val($max->val);
         if ($left->val == $max->val) {
-            $target->val($max->val);
             my $max_left = $max->left;
             $target->left($max_left);
             defined $max_left and $max_left->parent($target);
             defined $right and $right->parent($target);
             return $self;
         }
-        $target->val($max->val);
         my $max_lr = $max->lr;
         $max->parent->$max_lr(undef);
         return $self;
