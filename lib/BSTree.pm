@@ -82,17 +82,11 @@ sub remove {
             $target->val($max->val);
             my $max_lr = $max->lr;
             $max->parent->$max_lr(undef);
-
         } else {
-            if (defined $right) {
-                my $max = $right->max_node;
-                my $max_lr = $max->lr;
-                $max->parent->$max_lr(undef);
-                $target->val($max->val);
-            } else {
-                my $lr = $target->lr;
-                $parent->$lr(undef);
-            }
+            my $max = defined $right ? $right->max_node : $target;
+            my $max_lr = $max->lr;
+            $max->parent->$max_lr(undef);
+            defined $right and $target->val($max->val);
         }
     } else {
         if (defined $left) {
