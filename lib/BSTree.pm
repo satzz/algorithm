@@ -32,7 +32,7 @@ sub add_one {
         if (defined $child) {
             $child->add_one($new);
         } else {
-            $self->append($lr, $new);
+            $self->$lr(BSTree->new({val => $new, parent => $self}));
         }
     } else {
         $self->val($new);
