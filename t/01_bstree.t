@@ -306,6 +306,10 @@ test_from_yaml($tree, <<YAML);
 LR: root
 YAML
 
+$tree->add_random(10);
+my $a = $tree->flatten;
+is ref($a), 'ARRAY';
+
 
 warn $tree->to_yaml;
 
