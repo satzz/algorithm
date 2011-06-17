@@ -187,7 +187,7 @@ sub lr {
 
 sub copy_from {
     my ($self, $target) = @_;
-    $self->$_($target->$_) for qw/val left right parent/;
+    $self->$_($target->$_) for qw/val left right/;
 }
 
 sub to_json {
