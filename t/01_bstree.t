@@ -9,8 +9,11 @@ use BSTree;
 use Data::Dumper;
 
 my $tree = BSTree->new;
+test_from_yaml($tree, <<YAML);
+---
+LR: root
+YAML
 
-#add
 $tree->add(3);
 test_from_yaml($tree, <<YAML);
 ---
@@ -283,6 +286,7 @@ test_from_yaml($tree, <<YAML);
 LR: root
 V: 8
 YAML
+
 
 warn $tree->to_yaml;
 
