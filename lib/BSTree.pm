@@ -19,7 +19,7 @@ __PACKAGE__->mk_accessors qw/val left right parent/;
 sub add_one {
     my $self = shift;
     my $new = shift;
-    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
+    my $val = $self->val;
     if (defined $val) {
         my $lr = $new < $val ? 'left' : 'right';
         my $child = $self->$lr;
@@ -49,8 +49,7 @@ sub add_random {
 sub search {
     my ($self, $target_val) = @_;
     defined $target_val or return;
-    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
-
+    my $val = $self->val;
     $target_val == $val and return $self;
     my $lr = ($target_val < $val) ? 'left' : 'right';
     my $child = $self->$lr;
@@ -99,7 +98,10 @@ sub remove {
             $target->left($max_left);
             defined $max_left and $max_left->parent($target);
             defined $right and $right->parent($target);
+            return $self;
         }
+
+        $target->$_($left->$_) for qw/val left right/;
         return $self;
     }
 
