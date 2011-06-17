@@ -161,41 +161,12 @@ sub delete {
     $self;
 }
 
-# sub _delete {
-#     my ($self, $target_val) = @_;
-#     defined $target_val or warn "$target_val is not defined." and return $self;
-#     my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
-#     if ($val == $target_val) {
-#         if ($left and $right) {
-#             my $max_node = $left->max_node;
-#             $max_node->parent->right($max_node->left);
-#             $self->val($max_node);
-#             return;
-#         }
-#         my $lr = $parent->left == $self ? 'left' : 'right';
-#         $parent->$lr(defined $left ? $left :
-#                          defined $right ? $right : undef);
-# #             $parent->$lr($left // $right // undef); # in perl 5.10 ?
-#         return;
-#     }
-#     my $next = $target_val < $val ? 'left' : 'right';
-#     if (defined $self->$next) {
-#         $self->$next->_delete($target_val);
-#         return;
-#     }
-#     say "$target_val is not found";
-#     return;
-# }
-
 sub max_node {
     my $self = shift;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
     (defined $right and defined $right->val)
         ? $right->max_node : $self;
 }
-
-
-
 
 sub flush {
     my $self = shift;
@@ -228,16 +199,5 @@ sub to_yaml {
     my $self = shift;
     YAML::Dump($self->to_hash);
 }
-
-# sub is_leaf {
-#     my $self = shift;
-#     ! $self->has_child;
-# }
-
-# sub has_child {
-#     my $self = shift;
-#     $self->left and return 1;
-#     $self->right and return 1;
-# }
 
 1;
