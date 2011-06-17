@@ -55,11 +55,11 @@ sub search {
     my ($self, $target_val) = @_;
     defined $target_val or return;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
-    $target_val == $val
-        ? $self
-            : $target_val < $val
-                ? (defined $left ? $left->search($target_val) : undef)
-                    : (defined $right ? $right->search($target_val) : undef);
+
+    $target_val == $val and return $self;
+    my $lr = ($target_val < $val) ? 'left' : 'right';
+    my $child = $self->$lr;
+    defined $child and return $child->search($target_val);
 }
 
 sub search_say {
