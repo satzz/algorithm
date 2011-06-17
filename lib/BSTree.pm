@@ -117,17 +117,6 @@ sub flush {
     $self;
 }
 
-sub to_hash {
-    my $self = shift;
-    my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
-    my $h = { LR => $self->lr };
-    defined $val and $h->{V} = $val;
-    defined $parent and $h->{P} = $parent->val;
-    defined $left and $h->{L} = $left->to_hash;
-    defined $right and $h->{R} = $right->to_hash;
-    return $h;
-}
-
 sub flatten {
     my $self = shift;
     my $left = $self->left;
@@ -140,15 +129,6 @@ sub flatten {
 sub flatten_say {
     my $self = shift;
     say JSON::Syck::Dump [$self->flatten];
-}
-
-sub print {
-    my $self = shift;
-    $self->flatten_say;
-    my $h = $self->to_hash;
-    say JSON::Syck::Dump $h;
-    say YAML::Dump $h;
-    $self;
 }
 
 sub max_node {
@@ -172,6 +152,17 @@ sub copy_from {
     defined $target and $self->$_($target->$_) for qw/val left right/;
 }
 
+sub to_hash {
+    my $self = shift;
+    my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
+    my $h = { LR => $self->lr };
+    defined $val and $h->{V} = $val;
+    defined $parent and $h->{P} = $parent->val;
+    defined $left and $h->{L} = $left->to_hash;
+    defined $right and $h->{R} = $right->to_hash;
+    return $h;
+}
+
 sub to_json {
     my $self = shift;
     JSON::Syck::Dump($self->to_hash);
@@ -180,6 +171,15 @@ sub to_json {
 sub to_yaml {
     my $self = shift;
     YAML::Dump($self->to_hash);
+}
+
+sub print {
+    my $self = shift;
+    $self->flatten_say;
+    my $h = $self->to_hash;
+    say JSON::Syck::Dump $h;
+    say YAML::Dump $h;
+    $self;
 }
 
 1;
