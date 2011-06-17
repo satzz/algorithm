@@ -101,7 +101,9 @@ sub remove {
             defined $right and $right->parent($target);
             return $self;
         }
-        $target->graft($left);
+        $target->val($max->val);
+        my $max_lr = $max->lr;
+        $max->parent->$max_lr(undef);
         return $self;
     }
 

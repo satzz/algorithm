@@ -318,20 +318,24 @@ LR: root
 YAML
 
 $tree->add(4,2,1,3)->remove(4);
+warn $tree->to_yaml;
 test_from_yaml($tree, <<YAML);
 ---
 L:
+  L:
+    LR: left
+    P: 2
+    V: 1
   LR: left
-  P: 2
-  V: 1
+  P: 3
+  V: 2
 LR: root
-R:
-  LR: right
-  P: 2
-  V: 3
-V: 2
+V: 3
 YAML
 
+$tree->flush;
+# $tree->add(5,4,2,1,3)->remove(4);
+# warn $tree->to_yaml;
 
 
 
