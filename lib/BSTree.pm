@@ -117,7 +117,11 @@ sub delete {
                 defined $right and $right->parent($target);
             }
         } else {
-            $target->copy_from($right);
+            if (defined $right) {
+                $target->copy_from($right);
+            } else {
+                $target->val(undef);
+            }
         }
     }
     $self;
@@ -190,7 +194,7 @@ sub lr {
 
 sub copy_from {
     my ($self, $target) = @_;
-    $self->$_($target->$_) for qw/val left right/;
+    defined $target and $self->$_($target->$_) for qw/val left right/;
 }
 
 sub to_json {
