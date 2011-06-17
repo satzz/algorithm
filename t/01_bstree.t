@@ -311,6 +311,13 @@ $tree->add_random($times);
 my @a = $tree->flatten;
 is scalar(@a), $times;
 
+$tree->flush;
+test_from_yaml($tree, <<YAML);
+---
+LR: root
+YAML
+
+
 
 
 # warn $tree->to_yaml;
