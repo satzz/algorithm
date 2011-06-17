@@ -46,11 +46,6 @@ sub add_random {
     $self->add(map {int($max_val * rand)} 1..$times);
 }
 
-sub build_from {
-    my $class = shift;
-    $class->new->add(@_);
-}
-
 sub search {
     my ($self, $target_val) = @_;
     defined $target_val or return;
