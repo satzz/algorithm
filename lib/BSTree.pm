@@ -84,7 +84,6 @@ sub remove {
         $target->val($max->val);
         my $max_lr = $max->lr;
         $max->parent->$max_lr(undef);
-        $target->val($max->val);
     } else {
         if (defined $left) {
             my $max = $left->max_node;
