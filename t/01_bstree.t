@@ -293,7 +293,16 @@ test_from_yaml($tree, <<YAML);
 LR: root
 YAML
 
+$tree->add(6);
+test_from_yaml($tree, <<YAML);
+---
+LR: root
+V: 6
+YAML
+
 warn $tree->to_yaml;
+
+
 
 
 
