@@ -114,7 +114,7 @@ sub remove {
 
 sub max_node {
     my $self = shift;
-    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
+    my $right = $self->right;
     (defined $right and defined $right->val)
         ? $right->max_node : $self;
 }
