@@ -333,8 +333,24 @@ V: 3
 YAML
 
 $tree->flush;
-# $tree->add(5,4,2,1,3)->remove(4);
-# warn $tree->to_yaml;
+$tree->add(5,4,2,1,3)->remove(4);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  L:
+    L:
+      LR: left
+      P: 2
+      V: 1
+    LR: left
+    P: 3
+    V: 2
+  LR: left
+  P: 5
+  V: 3
+LR: root
+V: 5
+YAML
 
 
 
