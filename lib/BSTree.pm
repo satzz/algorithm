@@ -69,11 +69,6 @@ sub search_say {
             : "your tree does not have the elemnt $target";
 }
 
-sub copy_from {
-    my ($self, $target) = @_;
-    defined $target and $self->$_($target->$_) for qw/val left right/;
-}
-
 sub flush {
     my $self = shift;
     $self->val(undef);
@@ -114,7 +109,7 @@ sub remove {
     }
 
     if (defined $right) {
-        $target->copy_from($right);
+        $target->$_($right->$_) for qw/val left right/;
         return $self;
     }
 
