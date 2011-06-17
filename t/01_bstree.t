@@ -306,12 +306,13 @@ test_from_yaml($tree, <<YAML);
 LR: root
 YAML
 
-$tree->add_random(10);
-my $a = $tree->flatten;
-is ref($a), 'ARRAY';
+my $times = 10;
+$tree->add_random($times);
+my @a = $tree->flatten;
+is scalar(@a), $times;
 
 
-warn $tree->to_yaml;
+# warn $tree->to_yaml;
 
 
 
