@@ -90,6 +90,7 @@ sub remove {
         return $self;
     }
 
+    my $copied;
     if (defined $left) {
         my $max = $left->max_node;
         if ($left->val == $max->val) {
@@ -100,18 +101,22 @@ sub remove {
             defined $right and $right->parent($target);
             return $self;
         }
-
-        $target->$_($left->$_) for qw/val left right/;
+        $target->graft($left);
         return $self;
     }
 
     if (defined $right) {
-        $target->$_($right->$_) for qw/val left right/;
+        $target->graft($right);
         return $self;
     }
 
     $target->val(undef);
     return  $self;
+}
+
+sub graft {
+    my ($self, $orig) = @_;
+    $self->$_($orig->$_) for qw/val left right/;
 }
 
 sub max_node {

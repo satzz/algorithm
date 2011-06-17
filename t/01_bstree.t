@@ -318,7 +318,6 @@ LR: root
 YAML
 
 $tree->add(4,2,1,3)->remove(4);
-warn $tree->to_yaml;
 test_from_yaml($tree, <<YAML);
 ---
 L:
