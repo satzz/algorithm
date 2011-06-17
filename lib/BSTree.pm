@@ -31,13 +31,13 @@ sub add_one {
         my $child = $self->$lr;
         if (defined $child) {
             $child->add_one($new);
-        } else {
-            $self->$lr(BSTree->new({val => $new, parent => $self}));
+            return $self;
         }
-    } else {
-        $self->val($new);
+        $self->$lr(BSTree->new({val => $new, parent => $self}));
+        return $self;
     }
-    $self;
+    $self->val($new);
+    return $self;
 }
 
 sub add {
