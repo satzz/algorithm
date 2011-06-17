@@ -111,8 +111,10 @@ sub delete {
             my $max = $left->max_node;
             if ($left->val == $max->val) {
                 $target->val($max->val);
-                $target->left($max->left);
-                $max->left->parent($target);
+                my $max_left = $max->left;
+                $target->left($max_left);
+                defined $max_left and $max_left->parent($target);
+                defined $right and $right->parent($target);
             }
         } else {
             $target->copy_from($right);
