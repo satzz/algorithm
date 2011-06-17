@@ -134,9 +134,10 @@ sub flush {
 sub to_hash {
     my $self = shift;
     my $h = {
-             V => $self->val,
              LR => $self->lr,
          };
+    my $val = $self->val;
+    $h->{V} = $val if defined $val;
     my $p = $self->parent;
     $h->{P} = $p->val if defined $p;
     if (my $left = $self->left) {
