@@ -137,19 +137,12 @@ sub flush {
 
 sub to_hash {
     my $self = shift;
-    my $h = {
-             LR => $self->lr,
-         };
-    my $val = $self->val;
-    $h->{V} = $val if defined $val;
-    my $p = $self->parent;
-    $h->{P} = $p->val if defined $p;
-    if (my $left = $self->left) {
-        $h->{L} = $left->to_hash;
-    }
-    if (my $right = $self->right) {
-        $h->{R} = $right->to_hash;
-    }
+    my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
+    my $h = { LR => $self->lr };
+    defined $val and $h->{V} = $val;
+    defined $parent and $h->{P} = $parent->val;
+    defined $left and $h->{L} = $left->to_hash;
+    defined $right and $h->{R} = $right->to_hash;
     return $h;
 }
 
