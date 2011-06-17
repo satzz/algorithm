@@ -77,17 +77,14 @@ sub remove {
     defined $target or say "$target_val is not found." and return $self;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
     if (defined $parent) {
-        if (defined $left) {
-            my $max = $left->max_node;
-            $target->val($max->val);
-            my $max_lr = $max->lr;
-            $max->parent->$max_lr(undef);
-        } else {
-            my $max = defined $right ? $right->max_node : $target;
-            my $max_lr = $max->lr;
-            $max->parent->$max_lr(undef);
-            $target->val($max->val);
-        }
+        my $max =
+            defined $left  ? $left->max_node  :
+            defined $right ? $right->max_node :
+            $target;
+        $target->val($max->val);
+        my $max_lr = $max->lr;
+        $max->parent->$max_lr(undef);
+        $target->val($max->val);
     } else {
         if (defined $left) {
             my $max = $left->max_node;
