@@ -27,18 +27,12 @@ sub add_one {
     my $new = shift;
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
     if (defined $val) {
-        if ($new < $val) {
-            if (defined $left) {
-                $left->add_one($new);
-            } else {
-                $self->append('left', $new);
-            }
+        my $lr = $new < $val ? 'left' : 'right';
+        my $child = $self->$lr;
+        if (defined $child) {
+            $child->add_one($new);
         } else {
-            if (defined $right) {
-                $right->add_one($new);
-            } else {
-                $self->append('right', $new);
-            }
+            $self->append($lr, $new);
         }
     } else {
         $self->val($new);
