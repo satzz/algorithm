@@ -16,12 +16,6 @@ use Data::Dumper;
 
 __PACKAGE__->mk_accessors qw/val left right parent/;
 
-sub append {
-    my ($self, $lr, $new) = @_;
-    $self->$lr(BSTree->new({val => $new, parent => $self}));
-    $self;
-}
-
 sub add_one {
     my $self = shift;
     my $new = shift;
