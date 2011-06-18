@@ -114,10 +114,10 @@ sub remove_one {
         my $max = $left->max_node;
         $left eq $max and $target = $max->parent;
         $target->val($max->val);
-        my $max_left = $max->left;
+        my $child = $max->left;
         my $max_lr = $max->lr;
-        $max->parent->$max_lr($max_left);
-        $max_left and $max_left->parent_weaken($max->parent);
+        $max->parent->$max_lr($child);
+        $child and $child->parent_weaken($max->parent);
         $right and $right->parent_weaken($target);
         return $self;
     }
@@ -144,7 +144,7 @@ sub graft {
     for my $lr(qw/left right/) {
         my $child = $orig->$lr;
         $self->$lr($child);
-        $child and $child->parent($self);
+        $child and $child->parent_weaken($self);
     }
 }
 
