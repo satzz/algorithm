@@ -87,55 +87,45 @@ sub init {
 sub remove_one {
     my ($self, $target_val) = @_;
 
-    defined $target_val or say "target value is not defined." and return $self;
-    my $target = $self->search($target_val);
-    if (!$target) {
-        say "$target_val is not found.";
-        say $self->to_yaml;
-        return $self;
-    }
+    defined $target_val
+        or say "target value is not defined."
+            and return $self;
+    my $target = $self->search($target_val)
+        or say "$target_val is not found."
+            and return $self;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
 
     if ($parent) {
+        my $child = $left || $right;
+#         if ($left and $right) {
+#             my $max = $left->max_node;
+#             $target->val($max->val);
+#             $target = $max;
+#             $chlld = $max->left;
+#         }
         if ($left and $right) {
             my $max = $left->max_node;
             $target->val($max->val);
             my $max_lr = $max->lr;
             $max->parent->$max_lr($max->left);
-            if ($max->left) {
-                $max->left->parent_weaken($max->parent);
-            }
-        } else {
-            my $child = $left || $right;
-            if ($child) {
-                my $lr = $target->lr;
-                $parent->$lr($child);
-                $child->parent_weaken($parent);
-            } else {
-                my $lr = $target->lr;
-                $target->parent->$lr(undef);
-            }
+            $max->left and $max->left->parent_weaken($max->parent);
+            return $self;
         }
+        my $lr = $target->lr;
+        $parent->$lr($child);
+        $child and $child->parent_weaken($parent);
         return $self;
     }
 
     if ($left) {
         my $max = $left->max_node;
+        $left eq $max and $target = $max->parent;
         $target->val($max->val);
-        if ($left eq $max) {
-            my $max_left = $max->left;
-            $target->left($max_left);
-            defined $max_left and $max_left->parent_weaken($target);
-            defined $right and $right->parent_weaken($target);
-            return $self;
-        }
-        my $max_lr = $max->lr;
         my $max_left = $max->left;
+        my $max_lr = $max->lr;
         $max->parent->$max_lr($max_left);
         $max_left and $max_left->parent_weaken($max->parent);
-        $left->parent_weaken($target);
         $right and $right->parent_weaken($target);
-
         return $self;
     }
 
