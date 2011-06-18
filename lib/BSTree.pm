@@ -23,7 +23,7 @@ sub add_one {
     if (defined $val) {
         my $lr = $new < $val ? 'left' : 'right';
         my $child = $self->$lr;
-        if (defined $child) {
+        if ($child) {
             $child->add_one($new);
             return $self;
         }
@@ -53,7 +53,7 @@ sub search {
     $target_val == $val and return $self;
     my $lr = ($target_val < $val) ? 'left' : 'right';
     my $child = $self->$lr;
-    defined $child and return $child->search($target_val);
+    $child and return $child->search($target_val);
 }
 
 sub search_say {
@@ -81,13 +81,13 @@ sub remove {
 
     defined $target_val or say "target value is not defined." and return $self;
     my $target = $self->search($target_val);
-    defined $target or say "$target_val is not found." and return $self;
+    $target or say "$target_val is not found." and return $self;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
 
     if (defined $parent) {
         my $max =
-            defined $left  ? $left->max_node  :
-            defined $right ? $right->max_node :
+            $left  ? $left->max_node  :
+            $right ? $right->max_node :
             $target;
         $target->val($max->val);
         my $max_lr = $max->lr;
@@ -96,7 +96,7 @@ sub remove {
     }
 
     my $copied;
-    if (defined $left) {
+    if ($left) {
         my $max = $left->max_node;
         $target->val($max->val);
         if ($left->val == $max->val) {
@@ -111,7 +111,7 @@ sub remove {
         return $self;
     }
 
-    if (defined $right) {
+    if ($right) {
         $target->graft($right);
         return $self;
     }
@@ -128,16 +128,16 @@ sub graft {
 sub max_node {
     my $self = shift;
     my $right = $self->right;
-    (defined $right and defined $right->val)
+    ($right and defined $right->val)
         ? $right->max_node : $self;
 }
 
 sub lr {
     my ($self) = @_;
     my $parent = $self->parent;
-    defined $parent or return 'root';
+    $parent or return 'root';
     my $left = $parent->left;
-    defined $left or return 'right';
+    $left or return 'right';
     ($left->val == $self->val) ? 'left' : 'right';
 }
 
@@ -146,9 +146,9 @@ sub to_hash {
     my ($val, $left, $right, $parent) = map {$self->$_} qw/val left right parent/;
     my $h = { LR => $self->lr };
     defined $val and $h->{V} = $val;
-    defined $parent and $h->{P} = $parent->val;
-    defined $left and $h->{L} = $left->to_hash;
-    defined $right and $h->{R} = $right->to_hash;
+    $parent and $h->{P} = $parent->val;
+    $left and $h->{L} = $left->to_hash;
+    $right and $h->{R} = $right->to_hash;
     return $h;
 }
 
@@ -157,8 +157,8 @@ sub to_array {
     my ($val, $left, $right) = map {$self->$_} qw/val left right/;
     my @a;
     defined $val and push @a, $val;
-    defined $left and unshift @a, $left->to_array;
-    defined $right and push @a, $right->to_array;
+    $left and unshift @a, $left->to_array;
+    $right and push @a, $right->to_array;
     return [@a];
 }
 
@@ -182,9 +182,9 @@ sub flatten {
     my $self = shift;
     my $left = $self->left;
     my $right = $self->right;
-    (defined $left ? $left->flatten : (),
+    ($left ? $left->flatten : (),
      $self->val,
-     defined $right ? $right->flatten : ());
+     $right ? $right->flatten : ());
 }
 
 sub flatten_say {
