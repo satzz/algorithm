@@ -119,7 +119,7 @@ sub remove_one {
     if ($left) {
         my $max = $left->max_node;
         $target->val($max->val);
-        if ($left->val == $max->val) {
+        if ($left eq $max) {
             my $max_left = $max->left;
             $target->left($max_left);
             defined $max_left and $max_left->parent($target);
@@ -170,7 +170,7 @@ sub lr {
     $parent or return 'root';
     my $left = $parent->left;
     $left or return 'right';
-    ($left->val == $self->val) ? 'left' : 'right';
+    $left eq $self ? 'left' : 'right';
 }
 
 sub to_hash {

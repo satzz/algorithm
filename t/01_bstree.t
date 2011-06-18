@@ -362,20 +362,33 @@ LR: root
 V: 4
 YAML
 
+test_from_yaml($tree->init(2,1,1,3)->remove(2), <<YAML);
+---
+L:
+  LR: left
+  P: 1
+  V: 1
+LR: root
+R:
+  LR: right
+  P: 1
+  V: 3
+V: 1
+YAML
+
 goto HELL;
 
-my $times = 20;
+my $times = 10;
 my @a = 1..$times;
 $tree->init(@a)->remove(@a);
 is_null($tree);
-
-
 
 @a = (2) x $times;
 $tree->init(@a)->remove(@a);
 is_null($tree);
 
-my $max_val = 100;
+my $max_val = 20;
+for(1..10) {
 @a = map {int($max_val * rand)} 1..$times;
 say JSON::Syck::Dump [@a];
 
@@ -384,20 +397,20 @@ $tree->init(@a);
 say $tree->to_tree;
 my $old = $tree->to_yaml;
 for my $elm (@a) {
-    say "remove $elm";
+#     say "remove $elm";
     $tree->remove($elm);
     my $new = $tree->to_yaml;
-    say JSON::Syck::Dump [$tree->flatten];
+#     say JSON::Syck::Dump [$tree->flatten];
 
     if ($old eq $new) {
         say $old;
         say $new;
     }
     $old = $new;
-
 }
-
+# $tree->remove(@a);
 is_null($tree);
+}
 
 
 
