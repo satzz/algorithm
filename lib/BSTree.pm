@@ -115,8 +115,8 @@ sub remove_one {
         $left eq $max and $target = $max->parent;
         $target->val($max->val);
         my $child = $max->left;
-        my $max_lr = $max->lr;
-        $max->parent->$max_lr($child);
+        my $lr = $max->lr;
+        $max->parent->$lr($child);
         $child and $child->parent_weaken($max->parent);
         $right and $right->parent_weaken($target);
         return $self;
