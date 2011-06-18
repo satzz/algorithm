@@ -20,20 +20,28 @@ __PACKAGE__->mk_accessors qw/val left right parent/;
 sub add_one {
     my $self = shift;
     my $new = shift;
-    my $val = $self->val;
-    if (defined $val) {
-        my $lr = $new < $val ? 'left' : 'right';
-        my $child = $self->$lr;
-        if ($child) {
-            $child->add_one($new);
-            return $self;
+
+
+    my $target = $self;
+LOOP:
+    while (1) {
+        my $val = $target->val;
+
+        if (defined $val) {
+            my $lr = $new < $val ? 'left' : 'right';
+            my $child = $target->$lr;
+            if ($child) {
+                $target = $child;
+                next LOOP;
+            }
+            my $new_node = BSTree->new({val => $new});
+            $new_node->parent_weaken($target);
+            $target->$lr($new_node);
+            last LOOP;
         }
-        my $new_node = BSTree->new({val => $new});
-        $new_node->parent_weaken($self);
-        $self->$lr($new_node);
-        return $self;
+        $target->val($new);
+        last LOOP;
     }
-    $self->val($new);
     return $self;
 }
 
