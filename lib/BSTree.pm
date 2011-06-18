@@ -100,7 +100,7 @@ sub remove_one {
     if ($parent) {
         $child = $left || $right;
     } elsif ($left) {
-        $right and $right->parent_weaken($target);
+#         $right and $right->parent_weaken($target);
     }
 
     if ($left) {
@@ -111,6 +111,7 @@ sub remove_one {
             $target = $max;
             $child = $max->left;
         }
+        $parent or $right and $right->parent_weaken($target);
     }
 
     if ($parent or $left) {
