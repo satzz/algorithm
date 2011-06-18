@@ -337,7 +337,7 @@ YAML
 
 
 
-my $times = 5;
+my $times = 100;
 my $max_val = 100;
 my @a = 1..$times;
 $tree->flush->add(@a)->remove(@a);
@@ -346,21 +346,8 @@ is_null($tree);
 $tree->flush->add_random($times);
 @a = $tree->flatten;
 is scalar(@a), $times;
-# warn JSON::Syck::Dump [@a];
-for my $elm (@a) {
-#     warn "remove_one $elm";
-#     warn $tree->to_yaml;
-    $tree->remove_one($elm);
-}
-# warn $tree->to_tree;
-
-# test_from_yaml($tree, <<YAML);
-# ---
-# LR: root
-# YAML
-
-
-
+$tree->remove(@a);
+is_null($tree);
 
 
 my $val = 2;
