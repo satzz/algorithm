@@ -95,30 +95,29 @@ sub remove_one {
             and return $self;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
 
+    my $child;
+    my $max;
     if ($parent) {
-        my $child = $left || $right;
-        if ($left and $right) {
-            my $max = $left->max_node;
+        $child = $left || $right;
+    } elsif ($left) {
+        $right and $right->parent_weaken($target);
+    }
+
+    if ($left) {
+        if ($parent and $right or !$parent) {
+            $max = $left->max_node;
+            $left eq $max and $target = $max->parent;
             $target->val($max->val);
             $target = $max;
-            $child = $max->left;
+        $child = $max->left;
         }
+    }
+
+    if ($parent or $left) {
         my $lr = $target->lr;
         $parent = $target->parent;
         $parent->$lr($child);
         $child and $child->parent_weaken($parent);
-        return $self;
-    }
-
-    if ($left) {
-        my $max = $left->max_node;
-        $left eq $max and $target = $max->parent;
-        $target->val($max->val);
-        my $child = $max->left;
-        my $lr = $max->lr;
-        $max->parent->$lr($child);
-        $child and $child->parent_weaken($max->parent);
-        $right and $right->parent_weaken($target);
         return $self;
     }
 
