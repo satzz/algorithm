@@ -59,12 +59,16 @@ sub add_random {
 
 sub search {
     my ($self, $target_val) = @_;
-    defined $target_val or return;
-    my $val = $self->val;
-    $target_val == $val and return $self;
-    my $lr = ($target_val < $val) ? 'left' : 'right';
-    my $child = $self->$lr;
-    $child and return $child->search($target_val);
+    my $target = $self;
+LOOP:
+    while (1) {
+        defined $target_val or last LOOP;
+        my $val = $target->val;
+        $target_val == $val and return $target;
+        my $lr = ($target_val < $val) ? 'left' : 'right';
+        my $child = $target->$lr;
+        $child and $target = $child and next LOOP;
+    }
 }
 
 sub search_say {
