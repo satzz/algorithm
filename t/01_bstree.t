@@ -303,7 +303,7 @@ is_null($tree);
 $tree->add(1..5)->flush;
 is_null($tree);
 
-$tree->flush->add(4,2,1,3)->remove_one(4);
+$tree->init(4,2,1,3)->remove_one(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -318,7 +318,7 @@ LR: root
 V: 3
 YAML
 
-$tree->flush->add(7,6,5,1,2,4,3)->remove_one(6);
+$tree->init(7,6,5,1,2,4,3)->remove_one(6);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -345,7 +345,7 @@ LR: root
 V: 7
 YAML
 
-$tree->flush->add(5,4,2,1,3)->remove_one(4);
+$tree->init(5,4,2,1,3)->remove_one(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -364,7 +364,7 @@ LR: root
 V: 5
 YAML
 
-$tree->flush->add(5,1,2,4,2)->remove(5);
+$tree->init(5,1,2,4,2)->remove(5);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -387,20 +387,20 @@ goto HELL;
 
 my $times = 20;
 my @a = 1..$times;
-$tree->flush->add(@a)->remove(@a);
+$tree->init(@a)->remove(@a);
 is_null($tree);
 
 
 
 @a = (2) x $times;
-$tree->flush->add(@a)->remove(@a);
+$tree->init(@a)->remove(@a);
 is_null($tree);
 
 my $max_val = 100;
 @a = map {int($max_val * rand)} 1..$times;
 say JSON::Syck::Dump [@a];
 
-$tree->flush->add(@a);
+$tree->init(@a);
 
 say $tree->to_tree;
 my $old = $tree->to_yaml;
@@ -422,7 +422,7 @@ is_null($tree);
 
 
 
-# $tree->flush->add(@a);
+# $tree->init(@a);
 # warn $tree->to_tree;
 
 

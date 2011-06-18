@@ -76,6 +76,11 @@ sub flush {
     $self;
 }
 
+sub init {
+    my $self = shift;
+    $self->flush->add(@_);
+}
+
 sub remove_one {
     my ($self, $target_val) = @_;
 
