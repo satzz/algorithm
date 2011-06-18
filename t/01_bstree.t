@@ -354,8 +354,7 @@ is scalar(@a), $times;
 
 
 my $val = 2;
-$tree->flush;
-$tree->add(($val) x $times);
+$tree->flush->add(($val) x $times);
 $tree->remove($val) for (1 .. $times) ;
 test_from_yaml($tree, <<YAML);
 ---
