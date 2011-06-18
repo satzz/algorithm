@@ -376,6 +376,18 @@ R:
 V: 1
 YAML
 
+$tree->init(6,10,1,19,17,8,1,18,10,9);
+
+$tree->remove(6);
+$tree->remove(10);
+$tree->remove(1);
+$tree->remove(19);
+$tree->remove(17);
+$tree->remove(8);
+$tree->remove(1);
+
+is $tree, $tree->right->parent;
+
 goto HELL;
 
 my $times = 10;
@@ -397,10 +409,10 @@ $tree->init(@a);
 say $tree->to_tree;
 my $old = $tree->to_yaml;
 for my $elm (@a) {
-#     say "remove $elm";
+    say "remove $elm";
     $tree->remove($elm);
     my $new = $tree->to_yaml;
-#     say JSON::Syck::Dump [$tree->flatten];
+    say JSON::Syck::Dump [$tree->flatten];
 
     if ($old eq $new) {
         say $old;

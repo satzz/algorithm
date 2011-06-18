@@ -10,6 +10,7 @@ use Perl6::Say;
 use JSON::Syck;
 use YAML;
 use Data::Dumper;
+use Scalar::Util qw/weaken/;
 
 # use 5.010;
 
@@ -27,7 +28,9 @@ sub add_one {
             $child->add_one($new);
             return $self;
         }
-        $self->$lr(BSTree->new({val => $new, parent => $self}));
+        my $new_node = BSTree->new({val => $new});
+        $new_node->parent_weaken($self);
+        $self->$lr($new_node);
         return $self;
     }
     $self->val($new);
@@ -100,17 +103,17 @@ sub remove_one {
             my $max_lr = $max->lr;
             $max->parent->$max_lr($max->left);
             if ($max->left) {
-                $max->left->parent($max->parent);
+                $max->left->parent_weaken($max->parent);
             }
         } else {
             my $child = $left || $right;
             if ($child) {
                 my $lr = $target->lr;
                 $parent->$lr($child);
-                $child->parent($parent);
+                $child->parent_weaken($parent);
             } else {
                 my $lr = $target->lr;
-                $parent->$lr(undef)
+                $target->parent->$lr(undef);
             }
         }
         return $self;
@@ -122,16 +125,16 @@ sub remove_one {
         if ($left eq $max) {
             my $max_left = $max->left;
             $target->left($max_left);
-            defined $max_left and $max_left->parent($target);
-            defined $right and $right->parent($target);
+            defined $max_left and $max_left->parent_weaken($target);
+            defined $right and $right->parent_weaken($target);
             return $self;
         }
         my $max_lr = $max->lr;
         my $max_left = $max->left;
         $max->parent->$max_lr($max_left);
-        $max_left and $max_left->parent($max->parent);
-        $left->parent($target);
-        $right and $right->parent($target);
+        $max_left and $max_left->parent_weaken($max->parent);
+        $left->parent_weaken($target);
+        $right and $right->parent_weaken($target);
 
         return $self;
     }
@@ -154,7 +157,12 @@ sub remove {
 
 sub graft {
     my ($self, $orig) = @_;
-    $self->$_($orig->$_) for qw/val left right/;
+    $self->val($orig->val);
+    for my $lr(qw/left right/) {
+        my $child = $orig->$lr;
+        $self->$lr($child);
+        $child and $child->parent($self);
+    }
 }
 
 sub max_node {
@@ -171,6 +179,12 @@ sub lr {
     my $left = $parent->left;
     $left or return 'right';
     $left eq $self ? 'left' : 'right';
+}
+
+sub parent_weaken {
+    my ($self, $parent) = @_;
+    $self->parent($parent);
+    weaken($self->parent($parent));
 }
 
 sub to_hash {
