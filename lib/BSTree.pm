@@ -152,11 +152,17 @@ sub graft {
 
 sub max_node {
     my $self = shift;
-    my $right = $self->right;
-    ($right and defined $right->val)
-        ? $right->max_node : $self;
+    my $target = $self;
+LOOP:
+    while (1) {
+        my $right = $target->right;
+        if ($right and defined $right->val) {
+            $target = $right;
+            next LOOP;
+        }
+        return $target;
+    }
 }
-
 sub lr {
     my ($self) = @_;
     my $parent = $self->parent;
