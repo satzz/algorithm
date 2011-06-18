@@ -336,9 +336,15 @@ YAML
 
 
 
+
 my $times = 5;
+my $max_val = 100;
+my @a = 1..$times;
+$tree->flush->add(@a)->remove(@a);
+is_null($tree);
+
 $tree->flush->add_random($times);
-my @a = $tree->flatten;
+@a = $tree->flatten;
 is scalar(@a), $times;
 # warn JSON::Syck::Dump [@a];
 for my $elm (@a) {
@@ -353,8 +359,6 @@ for my $elm (@a) {
 # LR: root
 # YAML
 
-$tree->flush->add(1,5,9,54,70)->remove_one(1)->remove_one(5)->remove_one(9)->remove_one(54)->remove_one(70);
-is_null($tree);
 
 
 

@@ -120,6 +120,13 @@ sub remove_one {
     return  $self;
 }
 
+sub remove {
+    my $self= shift;
+    $self->remove_one($_) for @_;
+    $self;
+}
+
+
 sub graft {
     my ($self, $orig) = @_;
     $self->$_($orig->$_) for qw/val left right/;
