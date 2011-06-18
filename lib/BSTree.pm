@@ -99,13 +99,14 @@ sub remove_one {
 
     if ($left) {
 #         $parent or $right and $right->parent_weaken($target);
-        if ($parent and $right or !$parent) {
+        last if $parent and !$right;
+#         if ($parent and $right or !$parent) {
             my $max = $left->max_node;
             $left eq $max and $target = $max->parent;
             $target->val($max->val);
             $target = $max;
             $child = $max->left;
-        }
+#         }
     }
 
     if ($parent or $left) {
