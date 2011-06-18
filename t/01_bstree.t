@@ -12,15 +12,13 @@ use Perl6::Say;
 my $tree = BSTree->new;
 is_null($tree);
 
-$tree->add(3);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->add(3), <<YAML);
 ---
 LR: root
 V: 3
 YAML
 
-$tree->add(1);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->add(1), <<YAML);
 ---
 L:
   LR: left
@@ -30,8 +28,7 @@ LR: root
 V: 3
 YAML
 
-$tree->add(2);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->add(2), <<YAML);
 ---
 L:
   LR: left
@@ -98,8 +95,7 @@ R:
 V: 5
 YAML
 
-$tree->remove_one(5);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(5), <<YAML);
 ---
 L:
   LR: left
@@ -129,8 +125,7 @@ R:
 V: 3
 YAML
 
-$tree->remove_one(1);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(1), <<YAML);
 ---
 L:
   LR: left
@@ -156,8 +151,7 @@ R:
 V: 3
 YAML
 
-$tree->remove_one(7);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(7), <<YAML);
 ---
 L:
   LR: left
@@ -179,8 +173,7 @@ R:
 V: 3
 YAML
 
-$tree->add(1);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->add(1), <<YAML);
 ---
 L:
   L:
@@ -209,9 +202,9 @@ YAML
                 
 # TODO:parent test
 
-$tree->remove_one(3);
+
 # TODO:parent test
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(3), <<YAML);
 ---
 L:
   LR: left
@@ -233,10 +226,7 @@ R:
 V: 2
 YAML
 
-
-
-$tree->remove_one(1);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(1), <<YAML);
 ---
 LR: root
 R:
@@ -254,8 +244,7 @@ R:
 V: 2
 YAML
 
-$tree->remove_one(2);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(2), <<YAML);
 ---
 L:
   LR: left
@@ -269,8 +258,7 @@ R:
 V: 6
 YAML
 
-$tree->remove_one(6);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(6), <<YAML);
 ---
 LR: root
 R:
@@ -280,31 +268,25 @@ R:
 V: 4
 YAML
 
-$tree->remove_one(4);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->remove_one(4), <<YAML);
 ---
 LR: root
 V: 8
 YAML
 
-$tree->remove_one(8);
-is_null($tree);
+is_null($tree->remove_one(8));
 
-$tree->add(6);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->add(6), <<YAML);
 ---
 LR: root
 V: 6
 YAML
 
-$tree->remove_one(6);
-is_null($tree);
+is_null($tree->remove_one(6));
 
-$tree->add(1..5)->flush;
-is_null($tree);
+is_null($tree->add(1..5)->flush);
 
-$tree->init(4,2,1,3)->remove_one(4);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->init(4,2,1,3)->remove_one(4), <<YAML);
 ---
 L:
   L:
@@ -318,8 +300,7 @@ LR: root
 V: 3
 YAML
 
-$tree->init(7,6,5,1,2,4,3)->remove_one(6);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->init(7,6,5,1,2,4,3)->remove_one(6), <<YAML);
 ---
 L:
   L:
@@ -345,8 +326,7 @@ LR: root
 V: 7
 YAML
 
-$tree->init(5,4,2,1,3)->remove_one(4);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->init(5,4,2,1,3)->remove_one(4), <<YAML);
 ---
 L:
   L:
@@ -364,8 +344,7 @@ LR: root
 V: 5
 YAML
 
-$tree->init(5,1,2,4,2)->remove(5);
-test_from_yaml($tree, <<YAML);
+test_from_yaml($tree->init(5,1,2,4,2)->remove(5), <<YAML);
 ---
 L:
   LR: left
