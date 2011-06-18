@@ -65,6 +65,11 @@ sub search_say {
 
 sub flush {
     my $self = shift;
+    my $parent = $self->parent;
+    if ($parent) {
+        my $lr = $self->lr;
+        $parent->$lr(undef);
+    }
     $self->val(undef);
     $self->left(undef);
     $self->right(undef);
@@ -147,6 +152,21 @@ sub to_hash {
     return $h;
 }
 
+sub to_array {
+    my $self = shift;
+    my ($val, $left, $right) = map {$self->$_} qw/val left right/;
+    my @a;
+    defined $val and push @a, $val;
+    defined $left and unshift @a, $left->to_array;
+    defined $right and push @a, $right->to_array;
+    return [@a];
+}
+
+sub to_tree {
+    my $self = shift;
+    YAML::Dump($self->to_array);
+}
+
 sub to_json {
     my $self = shift;
     JSON::Syck::Dump($self->to_hash);
@@ -156,6 +176,7 @@ sub to_yaml {
     my $self = shift;
     YAML::Dump($self->to_hash);
 }
+
 
 sub flatten {
     my $self = shift;
