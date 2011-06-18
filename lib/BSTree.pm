@@ -109,7 +109,7 @@ sub remove_one {
             $left eq $max and $target = $max->parent;
             $target->val($max->val);
             $target = $max;
-        $child = $max->left;
+            $child = $max->left;
         }
     }
 
