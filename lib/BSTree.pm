@@ -163,6 +163,7 @@ LOOP:
         return $target;
     }
 }
+
 sub lr {
     my ($self) = @_;
     my $parent = $self->parent;
