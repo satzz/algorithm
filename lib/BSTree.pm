@@ -97,21 +97,14 @@ sub remove_one {
 
     if ($parent) {
         my $child = $left || $right;
-#         if ($left and $right) {
-#             my $max = $left->max_node;
-#             $target->val($max->val);
-#             $target = $max;
-#             $chlld = $max->left;
-#         }
         if ($left and $right) {
             my $max = $left->max_node;
             $target->val($max->val);
-            my $max_lr = $max->lr;
-            $max->parent->$max_lr($max->left);
-            $max->left and $max->left->parent_weaken($max->parent);
-            return $self;
+            $target = $max;
+            $child = $max->left;
         }
         my $lr = $target->lr;
+        $parent = $target->parent;
         $parent->$lr($child);
         $child and $child->parent_weaken($parent);
         return $self;
