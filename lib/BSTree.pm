@@ -81,21 +81,36 @@ sub remove_one {
 
     defined $target_val or say "target value is not defined." and return $self;
     my $target = $self->search($target_val);
-    $target or say "$target_val is not found." and return $self;
+    if (!$target) {
+        say "$target_val is not found.";
+        say $self->to_yaml;
+        return $self;
+    }
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
 
-    if (defined $parent) {
-        my $max =
-            $left  ? $left->max_node  :
-            $right ? $right->max_node :
-            $target;
-        $target->val($max->val);
-        my $max_lr = $max->lr;
-        $max->parent->$max_lr(undef);
+    if ($parent) {
+        if ($left and $right) {
+            my $max = $left->max_node;
+            $target->val($max->val);
+            my $max_lr = $max->lr;
+            $max->parent->$max_lr($max->left);
+            if ($max->left) {
+                $max->left->parent($max->parent);
+            }
+        } else {
+            my $child = $left || $right;
+            if ($child) {
+                my $lr = $target->lr;
+                $parent->$lr($child);
+                $child->parent($parent);
+            } else {
+                my $lr = $target->lr;
+                $parent->$lr(undef)
+            }
+        }
         return $self;
     }
 
-    my $copied;
     if ($left) {
         my $max = $left->max_node;
         $target->val($max->val);
@@ -107,7 +122,12 @@ sub remove_one {
             return $self;
         }
         my $max_lr = $max->lr;
-        $max->parent->$max_lr(undef);
+        my $max_left = $max->left;
+        $max->parent->$max_lr($max_left);
+        $max_left and $max_left->parent($max->parent);
+        $left->parent($target);
+        $right and $right->parent($target);
+
         return $self;
     }
 
@@ -197,6 +217,10 @@ sub flatten {
 sub flatten_say {
     my $self = shift;
     say JSON::Syck::Dump [$self->flatten];
+}
+
+sub is_valid {
+
 }
 
 sub print {

@@ -7,6 +7,7 @@ use JSON::Syck;
 use YAML;
 use BSTree;
 use Data::Dumper;
+use Perl6::Say;
 
 my $tree = BSTree->new;
 is_null($tree);
@@ -232,6 +233,8 @@ R:
 V: 2
 YAML
 
+
+
 $tree->remove_one(1);
 test_from_yaml($tree, <<YAML);
 ---
@@ -315,47 +318,126 @@ LR: root
 V: 3
 YAML
 
+$tree->flush->add(7,6,5,1,2,4,3)->remove_one(6);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  L:
+    LR: left
+    P: 5
+    R:
+      LR: right
+      P: 1
+      R:
+        L:
+          LR: left
+          P: 4
+          V: 3
+        LR: right
+        P: 2
+        V: 4
+      V: 2
+    V: 1
+  LR: left
+  P: 7
+  V: 5
+LR: root
+V: 7
+YAML
+
 $tree->flush->add(5,4,2,1,3)->remove_one(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
   L:
-    L:
-      LR: left
-      P: 2
-      V: 1
     LR: left
-    P: 3
-    V: 2
+    P: 2
+    V: 1
   LR: left
   P: 5
-  V: 3
+  R:
+    LR: right
+    P: 2
+    V: 3
+  V: 2
 LR: root
 V: 5
 YAML
 
+$tree->flush->add(5,1,2,4,2)->remove(5);
+test_from_yaml($tree, <<YAML);
+---
+L:
+  LR: left
+  P: 4
+  R:
+    LR: right
+    P: 1
+    R:
+      LR: right
+      P: 2
+      V: 2
+    V: 2
+  V: 1
+LR: root
+V: 4
+YAML
 
+goto HELL;
 
-
-my $times = 100;
-my $max_val = 100;
+my $times = 20;
 my @a = 1..$times;
 $tree->flush->add(@a)->remove(@a);
 is_null($tree);
 
-$tree->flush->add_random($times);
-@a = $tree->flatten;
-is scalar(@a), $times;
-$tree->remove(@a);
+
+
+@a = (2) x $times;
+$tree->flush->add(@a)->remove(@a);
+is_null($tree);
+
+my $max_val = 100;
+@a = map {int($max_val * rand)} 1..$times;
+say JSON::Syck::Dump [@a];
+
+$tree->flush->add(@a);
+
+say $tree->to_tree;
+my $old = $tree->to_yaml;
+for my $elm (@a) {
+    say "remove $elm";
+    $tree->remove($elm);
+    my $new = $tree->to_yaml;
+    say JSON::Syck::Dump [$tree->flatten];
+
+    if ($old eq $new) {
+        say $old;
+        say $new;
+    }
+    $old = $new;
+
+}
+
 is_null($tree);
 
 
-my $val = 2;
-$tree->flush->add(($val) x $times);
-$tree->remove_one($val) for (1 .. $times) ;
-is_null($tree);
+
+# $tree->flush->add(@a);
+# warn $tree->to_tree;
 
 
+
+# $tree->flush->add_random($times);
+# @a = $tree->flatten;
+# is scalar(@a), $times;
+# $tree->remove(@a);
+# is_null($tree);
+
+
+
+
+HELL:
+print 1;
 
 
 
