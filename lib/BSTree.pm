@@ -76,7 +76,7 @@ sub flush {
     $self;
 }
 
-sub remove {
+sub remove_one {
     my ($self, $target_val) = @_;
 
     defined $target_val or say "target value is not defined." and return $self;

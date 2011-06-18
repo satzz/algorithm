@@ -97,7 +97,7 @@ R:
 V: 5
 YAML
 
-$tree->remove(5);
+$tree->remove_one(5);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -128,7 +128,7 @@ R:
 V: 3
 YAML
 
-$tree->remove(1);
+$tree->remove_one(1);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -155,7 +155,7 @@ R:
 V: 3
 YAML
 
-$tree->remove(7);
+$tree->remove_one(7);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -208,7 +208,7 @@ YAML
                 
 # TODO:parent test
 
-$tree->remove(3);
+$tree->remove_one(3);
 # TODO:parent test
 test_from_yaml($tree, <<YAML);
 ---
@@ -232,7 +232,7 @@ R:
 V: 2
 YAML
 
-$tree->remove(1);
+$tree->remove_one(1);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
@@ -251,7 +251,7 @@ R:
 V: 2
 YAML
 
-$tree->remove(2);
+$tree->remove_one(2);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -266,7 +266,7 @@ R:
 V: 6
 YAML
 
-$tree->remove(6);
+$tree->remove_one(6);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
@@ -277,14 +277,14 @@ R:
 V: 4
 YAML
 
-$tree->remove(4);
+$tree->remove_one(4);
 test_from_yaml($tree, <<YAML);
 ---
 LR: root
 V: 8
 YAML
 
-$tree->remove(8);
+$tree->remove_one(8);
 is_null($tree);
 
 $tree->add(6);
@@ -294,13 +294,13 @@ LR: root
 V: 6
 YAML
 
-$tree->remove(6);
+$tree->remove_one(6);
 is_null($tree);
 
 $tree->add(1..5)->flush;
 is_null($tree);
 
-$tree->flush->add(4,2,1,3)->remove(4);
+$tree->flush->add(4,2,1,3)->remove_one(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -315,7 +315,7 @@ LR: root
 V: 3
 YAML
 
-$tree->flush->add(5,4,2,1,3)->remove(4);
+$tree->flush->add(5,4,2,1,3)->remove_one(4);
 test_from_yaml($tree, <<YAML);
 ---
 L:
@@ -342,9 +342,9 @@ my @a = $tree->flatten;
 is scalar(@a), $times;
 # warn JSON::Syck::Dump [@a];
 for my $elm (@a) {
-#     warn "remove $elm";
+#     warn "remove_one $elm";
 #     warn $tree->to_yaml;
-    $tree->remove($elm);
+    $tree->remove_one($elm);
 }
 # warn $tree->to_tree;
 
@@ -353,7 +353,7 @@ for my $elm (@a) {
 # LR: root
 # YAML
 
-$tree->flush->add(1,5,9,54,70)->remove(1)->remove(5)->remove(9)->remove(54)->remove(70);
+$tree->flush->add(1,5,9,54,70)->remove_one(1)->remove_one(5)->remove_one(9)->remove_one(54)->remove_one(70);
 is_null($tree);
 
 
@@ -361,7 +361,7 @@ is_null($tree);
 
 my $val = 2;
 $tree->flush->add(($val) x $times);
-$tree->remove($val) for (1 .. $times) ;
+$tree->remove_one($val) for (1 .. $times) ;
 is_null($tree);
 
 
