@@ -9,10 +9,7 @@ use BSTree;
 use Data::Dumper;
 
 my $tree = BSTree->new;
-test_from_yaml($tree, <<YAML);
----
-LR: root
-YAML
+is_null($tree);
 
 $tree->add(3);
 test_from_yaml($tree, <<YAML);
@@ -288,10 +285,7 @@ V: 8
 YAML
 
 $tree->remove(8);
-test_from_yaml($tree, <<YAML);
----
-LR: root
-YAML
+is_null($tree);
 
 $tree->add(6);
 test_from_yaml($tree, <<YAML);
@@ -301,16 +295,10 @@ V: 6
 YAML
 
 $tree->remove(6);
-test_from_yaml($tree, <<YAML);
----
-LR: root
-YAML
+is_null($tree);
 
 $tree->add(1..5)->flush;
-test_from_yaml($tree, <<YAML);
----
-LR: root
-YAML
+is_null($tree);
 
 $tree->flush->add(4,2,1,3)->remove(4);
 test_from_yaml($tree, <<YAML);
@@ -347,19 +335,34 @@ V: 5
 YAML
 
 
-my $times = 10;
+
+my $times = 5;
 $tree->flush->add_random($times);
 my @a = $tree->flatten;
 is scalar(@a), $times;
+# warn JSON::Syck::Dump [@a];
+for my $elm (@a) {
+#     warn "remove $elm";
+#     warn $tree->to_yaml;
+    $tree->remove($elm);
+}
+# warn $tree->to_tree;
+
+# test_from_yaml($tree, <<YAML);
+# ---
+# LR: root
+# YAML
+
+$tree->flush->add(1,5,9,54,70)->remove(1)->remove(5)->remove(9)->remove(54)->remove(70);
+is_null($tree);
+
+
 
 
 my $val = 2;
 $tree->flush->add(($val) x $times);
 $tree->remove($val) for (1 .. $times) ;
-test_from_yaml($tree, <<YAML);
----
-LR: root
-YAML
+is_null($tree);
 
 
 
@@ -367,9 +370,13 @@ YAML
 
 # warn $tree->to_yaml;
 
-
-
-
+sub is_null {
+    my $tree = shift;
+    test_from_yaml($tree, <<YAML);
+---
+LR: root
+YAML
+}
 
 
 
