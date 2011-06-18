@@ -99,13 +99,12 @@ sub remove_one {
 
     if ($left && ($right || !$parent)) {
         my $max = $left->max_node;
-        $left eq $max and $target = $max->parent;
         $child = $max->left;
         $target->val($max->val);
         $target = $max;
     }
 
-    if ($parent or $left) {
+    if ($parent || $left) {
         my $lr = $target->lr;
         $parent = $target->parent;
         $parent->$lr($child);
