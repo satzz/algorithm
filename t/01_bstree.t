@@ -388,9 +388,8 @@ $tree->remove(1);
 
 is $tree, $tree->right->parent;
 
-goto HELL;
 
-my $times = 10;
+my $times = 20;
 my @a = 1..$times;
 $tree->init(@a)->remove(@a);
 is_null($tree);
@@ -400,52 +399,15 @@ $tree->init(@a)->remove(@a);
 is_null($tree);
 
 my $max_val = 20;
-for(1..10) {
-@a = map {int($max_val * rand)} 1..$times;
-say JSON::Syck::Dump [@a];
-
-$tree->init(@a);
-
-say $tree->to_tree;
-my $old = $tree->to_yaml;
-for my $elm (@a) {
-    say "remove $elm";
-    $tree->remove($elm);
-    my $new = $tree->to_yaml;
-    say JSON::Syck::Dump [$tree->flatten];
-
-    if ($old eq $new) {
-        say $old;
-        say $new;
-    }
-    $old = $new;
-}
-# $tree->remove(@a);
-is_null($tree);
+for(1..20) {
+    $tree->flush->add_random($times);
+    @a = $tree->flatten;
+    is scalar(@a), $times;
+    $tree->remove(@a);
+    is_null($tree);
 }
 
 
-
-# $tree->init(@a);
-# warn $tree->to_tree;
-
-
-
-# $tree->flush->add_random($times);
-# @a = $tree->flatten;
-# is scalar(@a), $times;
-# $tree->remove(@a);
-# is_null($tree);
-
-
-
-
-HELL:
-print 1;
-
-
-
-# warn $tree->to_yaml;
 
 sub is_null {
     my $tree = shift;
