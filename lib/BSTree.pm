@@ -98,6 +98,7 @@ sub remove_one {
     my $child = $left || $right;
 
     if ($left) {
+#         $parent or $right and $right->parent_weaken($target);
         if ($parent and $right or !$parent) {
             my $max = $left->max_node;
             $left eq $max and $target = $max->parent;
@@ -105,7 +106,6 @@ sub remove_one {
             $target = $max;
             $child = $max->left;
         }
-        $parent or $right and $right->parent_weaken($target);
     }
 
     if ($parent or $left) {
