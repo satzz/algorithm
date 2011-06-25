@@ -409,6 +409,12 @@ for(1..20) {
 }
 
 no_leaks_ok {
+    my $tree = BSTree->new;
+    $tree->add_random(100)->flush;
+};
+
+no_leaks_ok {
+    my $tree = BSTree->new;
     $tree->flush->add_random(100);
 };
 
