@@ -199,8 +199,8 @@ sub lr {
 # FIX to BSTree::parent
 sub parent_weaken {
     my ($self, $parent) = @_;
-    $self->parent($parent);
-    weaken($self->{parent});
+    weaken($self->{parent} = $parent);
+#     weaken($self->{parent});
 }
 
 sub to_hash {
