@@ -17,14 +17,15 @@ use Scalar::Util qw/weaken/;
 
 __PACKAGE__->mk_accessors qw/val left right parent/;
 
+
 sub add_one {
     my $self = shift;
     my $new = shift;
     my $target = $self;
+    my $root = $self->root;
 LOOP:
     while (1) {
         my $val = $target->val;
-
         if (defined $val) {
             my $lr = $new < $val ? 'left' : 'right';
             my $child = $target->$lr;
@@ -35,14 +36,22 @@ LOOP:
             my $new_node = BSTree->new({val => $new});
             $new_node->parent_weaken($target);
             $target->$lr($new_node);
-            $self->{_last_modified} = $new_node;
+            $root->{_last_modified} = $new_node;
             last LOOP;
         }
         $target->val($new);
-        $self->{_last_modified} = $target;
+        $root->{_last_modified} = $target;
         last LOOP;
     }
     return $self;
+}
+
+sub root {
+    my $self = shift;
+    my $target = $self;
+    my $parent;
+    while($parent = $target->parent) {$target = $parent;}
+    return $target;
 }
 
 sub last_modified { $_[0]->{_last_modified} }
@@ -90,6 +99,7 @@ sub flush {
     $self->val(undef);
     $self->left(undef);
     $self->right(undef);
+    $self->root->{_last_modified} = undef;
     $self;
 }
 
@@ -107,8 +117,8 @@ sub remove_one {
     my $target = $self->search($target_val)
         or say "$target_val is not found."
             and return $self;
+    $self->root->{_last_modified} = undef;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
-
     my $child = $left || $right;
 
     if ($left && ($right || !$parent)) {
