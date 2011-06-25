@@ -35,6 +35,16 @@ is $tree->height, 4;
 is $tree->search(8)->height, 3;
 is $tree->search(6)->height, 2;
 is $tree->search(4)->height, 1;
+is $tree->search(10)->height, 1;
+is $tree->search(9)->height, 2;
+
+$tree->remove(8);
+is $tree->height, 4;
+is $tree->search(7)->height, 3;
+is $tree->search(6)->height, 2;
+is $tree->search(4)->height, 1;
+is $tree->search(10)->height, 1;
+is $tree->search(9)->height, 2;
 
 
 
