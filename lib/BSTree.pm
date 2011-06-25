@@ -106,6 +106,7 @@ sub flush {
     if ($parent) {
         my $lr = $self->lr;
         $parent->$lr(undef);
+        # TODO: undef to delete
     }
     $self->val(undef);
     $self->left(undef);
