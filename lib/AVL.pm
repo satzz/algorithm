@@ -13,7 +13,6 @@ sub new {
     $self->_height(defined $self->val ? 1 : 0);
     bless $self, $class;
     return $self;
-    
 }
 
 sub add_one {
@@ -21,7 +20,13 @@ sub add_one {
     $self->SUPER::add_one(shift);
     my $leaf = $self->last_modified;
     bless $leaf, __PACKAGE__;
-    my $target = $leaf;
+    $leaf->refresh_height;
+    $self;
+}
+
+sub refresh_height {
+    my $self = shift;
+    my $target = $self;
     while ($target) {
         my $max = 1;
         for my $lr qw/left right/ {
@@ -34,7 +39,20 @@ sub add_one {
     $self;
 }
 
-sub is_valid {
+
+sub remove_node {
+    my $self = shift;
+    $self->SUPER::remove_node;
+    my $first = $self;
+    if (my $left = $self->left) {
+        $first = $left->max_node || $left;
+    }
+    $first->refresh_height;
+    return $self;
+}
+
+sub  is_valid {
+
 }
 
 sub rotate {
