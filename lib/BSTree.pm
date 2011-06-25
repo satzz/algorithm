@@ -15,8 +15,16 @@ use Scalar::Util qw/weaken/;
 # use 5.010;
 
 
-__PACKAGE__->mk_accessors qw/val left right parent/;
+__PACKAGE__->mk_accessors qw/val left right parent _root/;
 
+sub new {
+    my $class = shift;
+    my $self = $class->SUPER::new(@_);
+    defined $self->val and weaken($self->{_last_modified} = $self);
+    $self;
+}
+
+sub has_val {defined $_[0]->val};
 
 sub add_one {
     my $self = shift;
@@ -48,9 +56,12 @@ LOOP:
 
 sub root {
     my $self = shift;
+    my $root = $self->{_root};
+    $root and return  $root;
     my $target = $self;
     my $parent;
     while($parent = $target->parent) {$target = $parent;}
+    weaken ($self->{_root} = $target);
     return $target;
 }
 

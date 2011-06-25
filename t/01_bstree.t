@@ -10,7 +10,11 @@ use Data::Dumper;
 use Perl6::Say;
 use Test::LeakTrace;
 
-my $tree = BSTree->new;
+my $tree = BSTree->new({val => 3});
+is $tree->root, $tree;
+is $tree->last_modified, $tree;
+
+$tree = BSTree->new;
 is_null($tree);
 
 is $tree->root, $tree;
