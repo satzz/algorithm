@@ -132,6 +132,13 @@ sub remove_val {
     my $target = $self->search($target_val)
         or say "$target_val is not found."
             and return $self;
+    $target->remove_node;
+    $self;
+}
+
+sub remove_node {
+    my $self = shift;
+    my $target = $self;
     $self->root->{_last_modified} = undef;
     my ($val, $left, $right, $parent) = map {$target->$_} qw/val left right parent/;
     my $child = $left || $right;
@@ -157,7 +164,7 @@ sub remove_val {
     }
 
     $target->val(undef);
-    return  $self;
+    return  $self->root;
 }
 
 sub remove {
