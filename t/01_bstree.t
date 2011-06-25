@@ -10,6 +10,8 @@ use Data::Dumper;
 use Perl6::Say;
 use Test::LeakTrace;
 
+BEGIN {use_ok 'BSTree'};
+
 my $tree = BSTree->new({val => 3});
 is $tree->root, $tree;
 is $tree->last_modified, $tree;
