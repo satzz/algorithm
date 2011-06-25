@@ -19,6 +19,8 @@ LR: root
 V: 3
 YAML
 
+is $tree->last_modified, $tree;
+
 test_from_yaml($tree->add(1), <<YAML);
 ---
 L:
@@ -28,6 +30,8 @@ L:
 LR: root
 V: 3
 YAML
+
+is $tree->last_modified, $tree->search(1);
 
 test_from_yaml($tree->add(2), <<YAML);
 ---
@@ -42,6 +46,8 @@ L:
 LR: root
 V: 3
 YAML
+
+is $tree->last_modified, $tree->search(2);
 
 $tree->add(7, 5, 8, 4 ,6);
 my $all = <<YAML;
@@ -286,6 +292,8 @@ YAML
 is_null($tree->remove_one(6));
 
 is_null($tree->add(1..5)->flush);
+
+
 
 test_from_yaml($tree->init(4,2,1,3)->remove_one(4), <<YAML);
 ---

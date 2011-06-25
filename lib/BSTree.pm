@@ -35,13 +35,17 @@ LOOP:
             my $new_node = BSTree->new({val => $new});
             $new_node->parent_weaken($target);
             $target->$lr($new_node);
+            $self->{_last_modified} = $new_node;
             last LOOP;
         }
         $target->val($new);
+        $self->{_last_modified} = $target;
         last LOOP;
     }
     return $self;
 }
+
+sub last_modified { $_[0]->{_last_modified} }
 
 sub add {
     my $self= shift;
@@ -171,6 +175,7 @@ sub lr {
     $left eq $self ? 'left' : 'right';
 }
 
+# FIX to BSTree::parent
 sub parent_weaken {
     my ($self, $parent) = @_;
     $self->parent($parent);
