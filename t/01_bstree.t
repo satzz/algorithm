@@ -115,7 +115,7 @@ R:
 V: 5
 YAML
 
-test_from_yaml($tree->remove_one(5), <<YAML);
+test_from_yaml($tree->remove_val(5), <<YAML);
 ---
 L:
   LR: left
@@ -149,7 +149,7 @@ is $tree->search(6)->root, $tree;
 
 is $tree->last_modified, undef;
 
-test_from_yaml($tree->remove_one(1), <<YAML);
+test_from_yaml($tree->remove_val(1), <<YAML);
 ---
 L:
   LR: left
@@ -175,7 +175,7 @@ R:
 V: 3
 YAML
 
-test_from_yaml($tree->remove_one(7), <<YAML);
+test_from_yaml($tree->remove_val(7), <<YAML);
 ---
 L:
   LR: left
@@ -228,7 +228,7 @@ YAML
 
 
 # TODO:parent test
-test_from_yaml($tree->remove_one(3), <<YAML);
+test_from_yaml($tree->remove_val(3), <<YAML);
 ---
 L:
   LR: left
@@ -250,7 +250,7 @@ R:
 V: 2
 YAML
 
-test_from_yaml($tree->remove_one(1), <<YAML);
+test_from_yaml($tree->remove_val(1), <<YAML);
 ---
 LR: root
 R:
@@ -268,7 +268,7 @@ R:
 V: 2
 YAML
 
-test_from_yaml($tree->remove_one(2), <<YAML);
+test_from_yaml($tree->remove_val(2), <<YAML);
 ---
 L:
   LR: left
@@ -282,7 +282,7 @@ R:
 V: 6
 YAML
 
-test_from_yaml($tree->remove_one(6), <<YAML);
+test_from_yaml($tree->remove_val(6), <<YAML);
 ---
 LR: root
 R:
@@ -292,13 +292,13 @@ R:
 V: 4
 YAML
 
-test_from_yaml($tree->remove_one(4), <<YAML);
+test_from_yaml($tree->remove_val(4), <<YAML);
 ---
 LR: root
 V: 8
 YAML
 
-is_null($tree->remove_one(8));
+is_null($tree->remove_val(8));
 
 test_from_yaml($tree->add(6), <<YAML);
 ---
@@ -306,13 +306,13 @@ LR: root
 V: 6
 YAML
 
-is_null($tree->remove_one(6));
+is_null($tree->remove_val(6));
 
 is_null($tree->add(1..5)->flush);
 
 is $tree->last_modified, undef;
 
-test_from_yaml($tree->init(4,2,1,3)->remove_one(4), <<YAML);
+test_from_yaml($tree->init(4,2,1,3)->remove_val(4), <<YAML);
 ---
 L:
   L:
@@ -326,7 +326,7 @@ LR: root
 V: 3
 YAML
 
-test_from_yaml($tree->init(7,6,5,1,2,4,3)->remove_one(6), <<YAML);
+test_from_yaml($tree->init(7,6,5,1,2,4,3)->remove_val(6), <<YAML);
 ---
 L:
   L:
@@ -352,7 +352,7 @@ LR: root
 V: 7
 YAML
 
-test_from_yaml($tree->init(5,4,2,1,3)->remove_one(4), <<YAML);
+test_from_yaml($tree->init(5,4,2,1,3)->remove_val(4), <<YAML);
 ---
 L:
   L:

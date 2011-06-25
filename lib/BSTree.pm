@@ -67,6 +67,8 @@ sub root {
 
 sub last_modified { $_[0]->{_last_modified} }
 
+
+
 sub add {
     my $self= shift;
     $self->add_one($_) for @_;
@@ -121,7 +123,7 @@ sub init {
     $self->flush->add(@_);
 }
 
-sub remove_one {
+sub remove_val {
     my ($self, $target_val) = @_;
 
     defined $target_val
@@ -160,7 +162,7 @@ sub remove_one {
 
 sub remove {
     my $self= shift;
-    $self->remove_one($_) for @_;
+    $self->remove_val($_) for @_;
     $self;
 }
 
