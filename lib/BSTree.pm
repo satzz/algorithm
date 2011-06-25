@@ -20,8 +20,6 @@ __PACKAGE__->mk_accessors qw/val left right parent/;
 sub add_one {
     my $self = shift;
     my $new = shift;
-
-
     my $target = $self;
 LOOP:
     while (1) {
@@ -176,7 +174,7 @@ sub lr {
 sub parent_weaken {
     my ($self, $parent) = @_;
     $self->parent($parent);
-    weaken($self->parent($parent));
+    weaken($self->{parent});
 }
 
 sub to_hash {

@@ -8,6 +8,7 @@ use YAML;
 use BSTree;
 use Data::Dumper;
 use Perl6::Say;
+use Test::LeakTrace;
 
 my $tree = BSTree->new;
 is_null($tree);
@@ -407,7 +408,9 @@ for(1..20) {
     is_null($tree);
 }
 
-
+no_leaks_ok {
+    $tree->flush->add_random(100);
+};
 
 sub is_null {
     my $tree = shift;
