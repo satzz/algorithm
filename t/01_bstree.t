@@ -13,10 +13,8 @@ use Test::LeakTrace;
 my $tree = BSTree->new;
 is_null($tree);
 
-# warn Dumper $tree->last_modified;
-# warn defined $tree->last_modified;
-# not ok defined $tree->last_modified;
-
+is $tree->root, $tree;
+is $tree->last_modified, undef;
 
 test_from_yaml($tree->add(3), <<YAML);
 ---
@@ -25,7 +23,7 @@ V: 3
 YAML
 
 is $tree->root, $tree;
-# is $tree->last_modified, $tree;
+is $tree->last_modified, $tree;
 
 test_from_yaml($tree->add(1), <<YAML);
 ---
@@ -37,7 +35,8 @@ LR: root
 V: 3
 YAML
 
-# is $tree->last_modified, $tree->search(1);
+is $tree->search(1)->root, $tree;
+is $tree->last_modified, $tree->search(1);
 
 test_from_yaml($tree->add(2), <<YAML);
 ---
@@ -53,7 +52,7 @@ LR: root
 V: 3
 YAML
 
-# is $tree->last_modified, $tree->search(2);
+is $tree->last_modified, $tree->search(2);
 
 $tree->add(7, 5, 8, 4 ,6);
 my $all = <<YAML;
@@ -142,7 +141,7 @@ YAML
 
 is $tree->search(6)->root, $tree;
 
-# not ok $tree->last_modified;
+is $tree->last_modified, undef;
 
 test_from_yaml($tree->remove_one(1), <<YAML);
 ---
@@ -305,7 +304,7 @@ is_null($tree->remove_one(6));
 
 is_null($tree->add(1..5)->flush);
 
-# not ok $tree->last_modified;
+is $tree->last_modified, undef;
 
 test_from_yaml($tree->init(4,2,1,3)->remove_one(4), <<YAML);
 ---
@@ -398,6 +397,9 @@ V: 1
 YAML
 
 $tree->init(6,10,1,19,17,8,1,18,10,9);
+
+is $tree->last_modified, $tree->search(9);
+is $tree->search(10)->root, $tree;
 
 $tree->remove(6);
 $tree->remove(10);
