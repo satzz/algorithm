@@ -174,6 +174,12 @@ sub graft {
     }
 }
 
+sub next {
+}
+
+sub prev {
+}
+
 sub max_node {
     my $self = shift;
     my $target = $self;
