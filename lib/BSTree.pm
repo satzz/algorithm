@@ -79,6 +79,7 @@ sub add_random {
     $self->add(map {int($max_val * rand)} 1..$times);
 }
 
+#TODO: cannot search duplicated value
 sub search {
     my ($self, $target_val) = @_;
     my $target = $self;
