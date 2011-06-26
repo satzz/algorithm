@@ -21,7 +21,9 @@ is $tree->last_modified->height, 1;
 # is $tree->height, 1;
 # die;
 
-$tree->init(11,8,9,10,6,7,4,5,3,14,15,12,13);
+
+$tree->init(11,8,14,6,9,12,15,4,7,10,13,3,5);
+
 is $tree->height, 5;
 is $tree->search(8)->height, 4;
 is $tree->search(6)->height, 3;
