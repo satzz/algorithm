@@ -30,9 +30,15 @@ sub refresh_height {
     my $target = $self->_first_to_refresh;
     while ($target) {
         my $max = 1;
+        my $child_h = {};
+        for my $lr (qw/left  right/) {
+            my $child = $target->$lr;
+            $child_h->{$lr} = $child ? $child->height : 0;
+        }
+
         for my $lr qw/left right/ {
-            my $child = $target->$lr or next;
-            $max < $child->height + 1 and $max = $child->height + 1;
+#             my $child = $child_h->$lr or next;
+            $max < $child_h->{$lr} + 1 and $max = $child_h->{$lr} + 1;
         }
         $target->_height($max);
         $target = $target->parent;
