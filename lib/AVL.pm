@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use base qw/BSTree/;
 
-__PACKAGE__->mk_accessors qw/_height/;
+__PACKAGE__->mk_accessors qw/_height _first_to_refresh/;
 
 sub height { $_[0]->_height }
 
@@ -20,13 +20,14 @@ sub add_one {
     $self->SUPER::add_one(shift);
     my $leaf = $self->last_modified;
     bless $leaf, __PACKAGE__;
-    $leaf->refresh_height;
+    $self->_first_to_refresh($leaf);
+    $self->refresh_height;
     $self;
 }
 
 sub refresh_height {
     my $self = shift;
-    my $target = $self;
+    my $target = $self->_first_to_refresh;
     while ($target) {
         my $max = 1;
         for my $lr qw/left right/ {
