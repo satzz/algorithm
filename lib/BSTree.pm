@@ -27,7 +27,7 @@ sub new {
 sub has_val {defined $_[0]->val};
 
 sub add_one {
-    my $self = shift;
+    my $self = shift->root;
     my $new = shift;
     my $target = $self;
     my $root = $self->root;
@@ -164,7 +164,7 @@ sub remove_node {
     }
 
     $target->val(undef);
-    return  $self->root;
+    return  $self;
 }
 
 sub remove {
